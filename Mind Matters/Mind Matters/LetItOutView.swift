@@ -108,28 +108,34 @@ struct LetItOutView: View {
                 .padding(.top, 40)
 
                 // Paper Input Area
-                ZStack {
-                    if !isReleasing {
-                        TextEditor(text: $text)
-                            .font(.system(size: 22, design: .serif))
-                            .lineSpacing(10)
-                            .scrollContentBackground(.hidden)
-                            .padding(60)
-                            .frame(maxWidth: 800, maxHeight: 750)
-                            .background(
-                                PaperView()
-                                    .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)
-                            )
-                            .transition(.asymmetric(
-                                insertion: .opacity,
-                                removal: .modifier(
-                                    active: FoldAndThrowModifier(progress: 1.0),
-                                    identity: FoldAndThrowModifier(progress: 0.0)
+                GeometryReader { geometry in
+                    ZStack {
+                        if !isReleasing {
+                            TextEditor(text: $text)
+                                .font(.system(size: 22, design: .serif))
+                                .lineSpacing(10)
+                                .scrollContentBackground(.hidden)
+                                .padding(60)
+                                .frame(maxWidth: 800)
+                                .frame(height: geometry.size.height * 0.9) // Use 90% of available height
+                                .background(
+                                    PaperView()
+                                        .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)
                                 )
-                            ))
+                                .transition(.asymmetric(
+                                    insertion: .opacity,
+                                    removal: .modifier(
+                                        active: FoldAndThrowModifier(progress: 1.0),
+                                        identity: FoldAndThrowModifier(progress: 0.0)
+                                    )
+                                ))
+                        }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .padding(.vertical, 40)
+                .padding(.horizontal)
+                .padding(.vertical, 20)
+                .frame(maxHeight: 800) // Caps the height for large displays like Mac/iPad Pro
 
                 // Release Button
                 Button(action: releaseConfession) {
@@ -151,7 +157,7 @@ struct LetItOutView: View {
                         .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.3), radius: 20, x: 0, y: 10)
                 }
                 .disabled(text.isEmpty || isReleasing)
-                .padding(.bottom, 60)
+                .padding(.bottom, 40)
                 
                 // Digital Trash Bin Indicator
                 if isReleasing {
@@ -159,7 +165,7 @@ struct LetItOutView: View {
                         .font(.system(size: 80))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.2))
                         .transition(.scale.combined(with: .opacity))
-                        .offset(y: -40)
+                        .offset(y: -20)
                 } else {
                     Color.clear.frame(height: 80)
                 }
@@ -190,12 +196,12 @@ struct LetItOutView: View {
     }
     
     private func releaseConfession() {
-        withAnimation(.easeInOut(duration: 2.0)) {
+        withAnimation(.easeInOut(duration: 2.2)) {
             isReleasing = true
         }
         
         // Reset after animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.3) {
             text = ""
             isReleasing = false
             currentQuestion = "Let everything out of your mind"
@@ -212,8 +218,10 @@ struct PaperView: View {
             context.fill(Path(rect), with: .color(Color(red: 0.99, green: 0.99, blue: 0.98)))
             
             // Subtle horizontal lines
-            for i in 1...20 {
-                let y = CGFloat(i) * 38
+            let lineSpacing: CGFloat = 38
+            let numberOfLines = Int(size.height / lineSpacing)
+            for i in 1...numberOfLines {
+                let y = CGFloat(i) * lineSpacing
                 var path = Path()
                 path.move(to: CGPoint(x: 40, y: y))
                 path.addLine(to: CGPoint(x: size.width - 40, y: y))
@@ -235,22 +243,27 @@ struct FoldAndThrowModifier: ViewModifier {
     var progress: CGFloat
     
     func body(content: Content) -> some View {
-        // folding: 0.0 -> 0.5
-        // throwing: 0.5 -> 1.0
-        let foldProgress = min(1.0, progress / 0.5)
+        // Phase 1: Fold towards center (0.0 -> 0.3)
+        let foldXProgress = min(1.0, progress / 0.3)
+        // Phase 2: Fold into square (0.3 -> 0.5)
+        let foldYProgress = max(0.0, min(1.0, (progress - 0.3) / 0.2))
+        // Phase 3: Throw away (0.5 -> 1.0)
         let throwProgress = max(0.0, (progress - 0.5) / 0.5)
         
         content
-            // Phase 1: Fold (Scaling X significantly then Y)
-            .scaleEffect(x: 1.0 - (foldProgress * 0.9), y: 1.0 - (foldProgress * 0.85))
-            .rotation3DEffect(.degrees(foldProgress * 60), axis: (x: 1, y: 0.2, z: 0))
+            // Sequence of folds
+            .scaleEffect(x: 1.0 - (foldXProgress * 0.9))
+            .rotation3DEffect(.degrees(foldXProgress * 90), axis: (x: 0, y: 1, z: 0))
             
-            // Phase 2: Throw
-            .rotationEffect(.degrees(throwProgress * 1500))
-            .offset(y: throwProgress * 1500)
+            .scaleEffect(y: 1.0 - (foldYProgress * 0.85))
+            .rotation3DEffect(.degrees(foldYProgress * 90), axis: (x: 1, y: 0, z: 0))
+            
+            // Throw effect
+            .rotationEffect(.degrees(throwProgress * 1800))
+            .offset(y: throwProgress * 1600)
             .scaleEffect(1.0 - (throwProgress * 0.95))
             .opacity(1.0 - throwProgress)
-            .blur(radius: throwProgress * 8)
+            .blur(radius: throwProgress * 10)
     }
 }
 

@@ -5,6 +5,7 @@ struct LetItOutView: View {
     @State private var text: String = ""
     @State private var isReleasing: Bool = false
     @State private var currentQuestion: String = "Let everything out of your mind"
+    @State private var showQuestions: Bool = false
     
     // 50 Deep Emotional Reflections
     private let questions = [
@@ -68,84 +69,63 @@ struct LetItOutView: View {
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
             
-            Color.white.opacity(0.2)
-                .background(.ultraThinMaterial.opacity(0.4))
+            Color.white.opacity(0.1)
+                .background(.ultraThinMaterial.opacity(0.3))
                 .ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                // Header with visible Back Button
-                HStack {
-                    Button(action: { dismiss() }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chevron.left.circle.fill")
-                                .font(.title2)
-                            Text("Back")
-                                .fontWeight(.medium)
-                        }
-                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Capsule())
-                        .shadow(color: .black.opacity(0.1), radius: 5)
-                    }
-                    
-                    Spacer()
-                    
-                    Text("Mind Sanctuary")
-                        .font(.system(size: 28, weight: .light, design: .serif))
-                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                        .opacity(0.8)
-                    
-                    Spacer()
-                    
-                    // Invisible spacer for centering
-                    Color.clear.frame(width: 100, height: 1)
-                }
-                .padding(.top, 20)
-                .padding(.horizontal)
+            VStack(spacing: 0) {
+                // Header (Simple display, button moved to safeAreaInset for reliability)
+                Text("Mind Sanctuary")
+                    .font(.system(size: 24, weight: .light, design: .serif))
+                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                    .opacity(0.6)
+                    .padding(.top, 10)
 
                 Spacer()
 
                 // Question Area
-                VStack(spacing: 15) {
+                VStack(spacing: 20) {
                     Text(currentQuestion)
-                        .font(.system(size: 28, weight: .thin, design: .serif))
+                        .font(.system(size: 32, weight: .thin, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, 50)
+                        .padding(.horizontal, 60)
                         .id(currentQuestion)
+                        .transition(.opacity)
 
                     Button(action: {
                         withAnimation(.spring()) {
                             currentQuestion = questions.randomElement() ?? questions[0]
+                            showQuestions = true
                         }
                     }) {
                         Label("Get Random Question", systemImage: "sparkles")
                             .font(.subheadline)
                             .fontWeight(.medium)
                             .foregroundColor(.white)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 28)
                             .background(
                                 Capsule()
                                     .fill(Color(red: 0.5, green: 0.7, blue: 0.9))
                             )
-                            .shadow(color: .blue.opacity(0.2), radius: 8, x: 0, y: 4)
+                            .shadow(color: .blue.opacity(0.15), radius: 10, x: 0, y: 5)
                     }
                 }
+                .padding(.top, 40)
 
                 // Paper Input Area
                 ZStack {
                     if !isReleasing {
                         TextEditor(text: $text)
                             .font(.system(size: 22, design: .serif))
+                            .lineSpacing(10)
                             .scrollContentBackground(.hidden)
-                            .padding(50)
-                            .frame(maxWidth: 800, maxHeight: 550)
+                            .padding(60)
+                            .frame(maxWidth: 800, maxHeight: 600)
                             .background(
                                 PaperView()
-                                    .shadow(color: .black.opacity(0.12), radius: 25, x: 0, y: 15)
+                                    .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)
                             )
                             .transition(.asymmetric(
                                 insertion: .opacity,
@@ -156,53 +136,77 @@ struct LetItOutView: View {
                             ))
                     }
                 }
-                .padding(.vertical)
+                .padding(.vertical, 40)
 
                 // Release Button
                 Button(action: releaseConfession) {
-                    Text("Release")
-                        .font(.title2)
+                    Text("Release Thoughts")
+                        .font(.title3)
                         .fontWeight(.light)
                         .foregroundColor(.white)
-                        .frame(width: 240, height: 60)
+                        .frame(width: 260, height: 64)
                         .background(
                             ZStack {
                                 Capsule()
-                                    .fill(text.isEmpty ? Color.gray.opacity(0.3) : Color(red: 0.4, green: 0.6, blue: 0.8))
+                                    .fill(text.isEmpty ? Color.gray.opacity(0.4) : Color(red: 0.4, green: 0.6, blue: 0.8))
                                 if !text.isEmpty {
                                     Capsule()
-                                        .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
                                 }
                             }
                         )
-                        .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.3), radius: 15, x: 0, y: 8)
+                        .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.3), radius: 20, x: 0, y: 10)
                 }
                 .disabled(text.isEmpty || isReleasing)
-                .padding(.bottom, 40)
+                .padding(.bottom, 60)
                 
-                // Digital Trash Bin (Indicator during release)
+                // Digital Trash Bin Indicator
                 if isReleasing {
                     Image(systemName: "trash.circle.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.3))
+                        .font(.system(size: 80))
+                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.2))
                         .transition(.scale.combined(with: .opacity))
+                        .offset(y: -40)
+                } else {
+                    Color.clear.frame(height: 80)
                 }
             }
             .padding()
         }
         .navigationBarHidden(true)
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Button(action: { dismiss() }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "chevron.left")
+                        Text("Back to Main Page")
+                    }
+                    .font(.headline)
+                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 20)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(30)
+                    .shadow(color: .black.opacity(0.1), radius: 10)
+                }
+                Spacer()
+            }
+            .padding(.leading, 30)
+            .padding(.top, 20)
+        }
     }
     
     private func releaseConfession() {
-        withAnimation(.easeInOut(duration: 1.8)) {
+        withAnimation(.easeInOut(duration: 2.0)) {
             isReleasing = true
         }
         
         // Reset after animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.9) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.1) {
             text = ""
             isReleasing = false
             currentQuestion = "Let everything out of your mind"
+            showQuestions = false
         }
     }
 }
@@ -212,24 +216,24 @@ struct PaperView: View {
     var body: some View {
         Canvas { context, size in
             let rect = CGRect(origin: .zero, size: size)
-            context.fill(Path(rect), with: .color(Color(red: 0.99, green: 0.99, blue: 0.97)))
+            context.fill(Path(rect), with: .color(Color(red: 0.99, green: 0.99, blue: 0.98)))
             
             // Subtle horizontal lines
-            for i in 1...18 {
-                let y = CGFloat(i) * 40
+            for i in 1...20 {
+                let y = CGFloat(i) * 38
                 var path = Path()
-                path.move(to: CGPoint(x: 30, y: y))
-                path.addLine(to: CGPoint(x: size.width - 30, y: y))
-                context.stroke(path, with: .color(Color.blue.opacity(0.04)), lineWidth: 1)
+                path.move(to: CGPoint(x: 40, y: y))
+                path.addLine(to: CGPoint(x: size.width - 40, y: y))
+                context.stroke(path, with: .color(Color.blue.opacity(0.03)), lineWidth: 1)
             }
             
             // Vertical margin line
             var sideline = Path()
-            sideline.move(to: CGPoint(x: 80, y: 0))
-            sideline.addLine(to: CGPoint(x: 80, y: size.height))
-            context.stroke(sideline, with: .color(Color.red.opacity(0.08)), lineWidth: 1.5)
+            sideline.move(to: CGPoint(x: 90, y: 0))
+            sideline.addLine(to: CGPoint(x: 90, y: size.height))
+            context.stroke(sideline, with: .color(Color.red.opacity(0.06)), lineWidth: 1.5)
         }
-        .cornerRadius(8)
+        .cornerRadius(12)
     }
 }
 
@@ -238,22 +242,27 @@ struct FoldAndThrowModifier: ViewModifier {
     var progress: CGFloat
     
     func body(content: Content) -> some View {
-        // We divide the progress: 0.0 -> 0.4 is folding, 0.4 -> 1.0 is throwing
-        let foldProgress = min(1.0, progress / 0.4)
-        let throwProgress = max(0.0, (progress - 0.4) / 0.6)
+        // folding: 0.0 -> 0.5
+        // throwing: 0.5 -> 1.0
+        let foldProgress = min(1.0, progress / 0.5)
+        let throwProgress = max(0.0, (progress - 0.5) / 0.5)
         
         content
-            // Folding phase: Scale down X and Y differently to simulate folding
-            .scaleEffect(x: 1.0 - (foldProgress * 0.7), y: 1.0 - (foldProgress * 0.7))
-            .rotation3DEffect(.degrees(foldProgress * 45), axis: (x: 1, y: 0, z: 0))
+            // Phase 1: Fold (Scaling X significantly then Y)
+            .scaleEffect(x: 1.0 - (foldProgress * 0.9), y: 1.0 - (foldProgress * 0.85))
+            .rotation3DEffect(.degrees(foldProgress * 60), axis: (x: 1, y: 0.2, z: 0))
             
-            // Throwing phase: Move and spin wildly
-            .rotationEffect(.degrees(throwProgress * 1080))
+            // Phase 2: Throw
+            .rotationEffect(.degrees(throwProgress * 1500))
+            .offset(y: throwProgress * 1500)
             .scaleEffect(1.0 - (throwProgress * 0.95))
-            .offset(y: throwProgress * 1200)
             .opacity(1.0 - throwProgress)
-            .blur(radius: throwProgress * 5)
+            .blur(radius: throwProgress * 8)
     }
+}
+
+#Preview {
+    LetItOutView()
 }
 
 #Preview {

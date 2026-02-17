@@ -3,58 +3,37 @@ import SwiftUI
 struct WelcomeView: View {
     var body: some View {
         ZStack {
-            // Background Gradient
-            LinearGradient(
-                colors: [
-                    Color(red: 0.85, green: 0.94, blue: 1.0), // Very light soft blue
-                    Color(red: 0.70, green: 0.88, blue: 0.98)  // Slightly deeper soft blue
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // Nature Background Wallpaper
+            Image("WelcomeWallpaper")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .ignoresSafeArea()
             
-            // Soft atmospheric "clouds" or glow
-            VStack {
-                HStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.3))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: -100, y: -100)
-                    Spacer()
-                }
-                Spacer()
-                HStack {
-                    Spacer()
-                    Circle()
-                        .fill(Color.blue.opacity(0.1))
-                        .frame(width: 400, height: 400)
-                        .blur(radius: 80)
-                        .offset(x: 150, y: 150)
-                }
-            }
-            .ignoresSafeArea()
+            // Soft overlay to ensure readability
+            Color.white.opacity(0.15)
+                .background(.ultraThinMaterial.opacity(0.3))
+                .ignoresSafeArea()
 
-            VStack(spacing: 40) {
+            VStack(spacing: 50) {
                 Spacer()
                 
-                // App Name
-                VStack(spacing: 8) {
+                // App Title and Description
+                VStack(spacing: 15) {
                     Text("Mind Matters")
-                        .font(.system(size: 64, weight: .thin, design: .serif))
+                        .font(.system(size: 80, weight: .thin, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                        .shadow(color: .white.opacity(0.5), radius: 10)
                     
                     Text("Your sanctuary for peace and clarity.")
-                        .font(.system(size: 20, weight: .light, design: .rounded))
+                        .font(.system(size: 24, weight: .light, design: .rounded))
                         .foregroundColor(Color(red: 0.2, green: 0.4, blue: 0.6))
                         .italic()
+                        .padding(.horizontal, 40)
+                        .multilineTextAlignment(.center)
                 }
                 
-                Spacer()
-                
-                // Category Buttons
-                HStack(spacing: 30) {
+                // Category Buttons - Now centered under description
+                HStack(spacing: 40) {
                     WelcomeButton(
                         title: "Relaxing-Game",
                         icon: "gamecontroller",
@@ -73,7 +52,10 @@ struct WelcomeView: View {
                         color: Color(red: 0.55, green: 0.75, blue: 0.95)
                     )
                 }
-                .padding(.bottom, 60)
+                .padding(.top, 20)
+                
+                Spacer()
+                Spacer() // Pushes everything slightly up for better centering in large screens
             }
             .padding()
         }
@@ -87,28 +69,27 @@ struct WelcomeButton: View {
     
     var body: some View {
         Button(action: {
-            // Action will be implemented later
             print("\(title) tapped")
         }) {
-            VStack(spacing: 20) {
+            VStack(spacing: 15) {
                 Image(systemName: icon)
-                    .font(.system(size: 40))
+                    .font(.system(size: 45))
                 
                 Text(title)
-                    .font(.headline)
+                    .font(.title3)
                     .fontWeight(.medium)
             }
-            .frame(width: 200, height: 200)
+            .frame(width: 220, height: 200)
             .background(
-                RoundedRectangle(cornerRadius: 30)
+                RoundedRectangle(cornerRadius: 35)
                     .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 30)
-                            .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 35)
+                            .stroke(Color.white.opacity(0.6), lineWidth: 1.5)
                     )
             )
-            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+            .foregroundColor(Color(red: 0.05, green: 0.25, blue: 0.45))
+            .shadow(color: Color.black.opacity(0.1), radius: 15, x: 0, y: 8)
         }
         .buttonStyle(PlainButtonStyle())
     }

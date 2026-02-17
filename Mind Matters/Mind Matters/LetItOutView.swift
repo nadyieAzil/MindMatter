@@ -3,8 +3,8 @@ import SwiftUI
 struct LetItOutView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var text: String = ""
-    @State private var isIsReleasing: Bool = false
-    @State private var currentQuestion: String = "What is bothering you right now?"
+    @State private var isReleasing: Bool = false
+    @State private var currentQuestion: String = "Let everything out of your mind"
     
     // 50 Deep Emotional Reflections
     private let questions = [
@@ -72,112 +72,120 @@ struct LetItOutView: View {
                 .background(.ultraThinMaterial.opacity(0.4))
                 .ignoresSafeArea()
 
-            VStack(spacing: 30) {
-                // Header
+            VStack(spacing: 20) {
+                // Header with visible Back Button
                 HStack {
                     Button(action: { dismiss() }) {
-                        HStack {
-                            Image(systemName: "chevron.left")
+                        HStack(spacing: 8) {
+                            Image(systemName: "chevron.left.circle.fill")
+                                .font(.title2)
                             Text("Back")
+                                .fontWeight(.medium)
                         }
-                        .font(.headline)
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                        .padding()
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
                         .background(.ultraThinMaterial)
-                        .cornerRadius(15)
+                        .clipShape(Capsule())
+                        .shadow(color: .black.opacity(0.1), radius: 5)
                     }
+                    
                     Spacer()
                     
-                    Text("Let It Out")
-                        .font(.system(size: 32, weight: .thin, design: .serif))
+                    Text("Mind Sanctuary")
+                        .font(.system(size: 28, weight: .light, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                        .opacity(0.8)
                     
                     Spacer()
                     
-                    // Empty spacer to center title
-                    Color.clear.frame(width: 80, height: 1)
+                    // Invisible spacer for centering
+                    Color.clear.frame(width: 100, height: 1)
                 }
+                .padding(.top, 20)
                 .padding(.horizontal)
 
                 Spacer()
 
                 // Question Area
-                VStack(spacing: 20) {
+                VStack(spacing: 15) {
                     Text(currentQuestion)
-                        .font(.title2)
-                        .fontWeight(.light)
-                        .foregroundColor(Color(red: 0.2, green: 0.4, blue: 0.6))
+                        .font(.system(size: 28, weight: .thin, design: .serif))
+                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                        .transition(.opacity)
+                        .padding(.horizontal, 50)
                         .id(currentQuestion)
 
                     Button(action: {
-                        withAnimation {
+                        withAnimation(.spring()) {
                             currentQuestion = questions.randomElement() ?? questions[0]
                         }
                     }) {
-                        Text("Get Random Question")
+                        Label("Get Random Question", systemImage: "sparkles")
                             .font(.subheadline)
                             .fontWeight(.medium)
                             .foregroundColor(.white)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 20)
-                            .background(Color(red: 0.5, green: 0.7, blue: 0.9))
-                            .cornerRadius(20)
-                            .shadow(radius: 5)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 24)
+                            .background(
+                                Capsule()
+                                    .fill(Color(red: 0.5, green: 0.7, blue: 0.9))
+                            )
+                            .shadow(color: .blue.opacity(0.2), radius: 8, x: 0, y: 4)
                     }
                 }
 
                 // Paper Input Area
                 ZStack {
-                    if !isIsReleasing {
+                    if !isReleasing {
                         TextEditor(text: $text)
-                            .font(.system(size: 20, design: .serif))
+                            .font(.system(size: 22, design: .serif))
                             .scrollContentBackground(.hidden)
-                            .padding(40)
-                            .frame(maxWidth: 700, maxHeight: 500)
+                            .padding(50)
+                            .frame(maxWidth: 800, maxHeight: 550)
                             .background(
                                 PaperView()
-                                    .shadow(color: .black.opacity(0.1), radius: 20, x: 0, y: 10)
+                                    .shadow(color: .black.opacity(0.12), radius: 25, x: 0, y: 15)
                             )
                             .transition(.asymmetric(
-                                insertion: .identity,
+                                insertion: .opacity,
                                 removal: .modifier(
-                                    active: CrumpleModifier(progress: 1.0),
-                                    identity: CrumpleModifier(progress: 0.0)
+                                    active: FoldAndThrowModifier(progress: 1.0),
+                                    identity: FoldAndThrowModifier(progress: 0.0)
                                 )
                             ))
                     }
                 }
-                .padding()
+                .padding(.vertical)
 
                 // Release Button
                 Button(action: releaseConfession) {
                     Text("Release")
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        .font(.title2)
+                        .fontWeight(.light)
                         .foregroundColor(.white)
-                        .frame(width: 200, height: 60)
+                        .frame(width: 240, height: 60)
                         .background(
-                            Capsule()
-                                .fill(text.isEmpty ? Color.gray.opacity(0.5) : Color(red: 0.4, green: 0.6, blue: 0.8))
+                            ZStack {
+                                Capsule()
+                                    .fill(text.isEmpty ? Color.gray.opacity(0.3) : Color(red: 0.4, green: 0.6, blue: 0.8))
+                                if !text.isEmpty {
+                                    Capsule()
+                                        .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                                }
+                            }
                         )
-                        .shadow(radius: 10)
+                        .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.3), radius: 15, x: 0, y: 8)
                 }
-                .disabled(text.isEmpty || isIsReleasing)
-                .opacity(text.isEmpty ? 0.6 : 1.0)
+                .disabled(text.isEmpty || isReleasing)
+                .padding(.bottom, 40)
                 
-                Spacer()
-                
-                // Digital Trash Bin (Visible during release)
-                if isIsReleasing {
-                    Image(systemName: "trash")
-                        .font(.system(size: 40))
-                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.5))
-                        .padding(.bottom, 20)
-                } else {
-                    Color.clear.frame(height: 60)
+                // Digital Trash Bin (Indicator during release)
+                if isReleasing {
+                    Image(systemName: "trash.circle.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.3))
+                        .transition(.scale.combined(with: .opacity))
                 }
             }
             .padding()
@@ -186,15 +194,15 @@ struct LetItOutView: View {
     }
     
     private func releaseConfession() {
-        withAnimation(.easeInOut(duration: 1.5)) {
-            isIsReleasing = true
+        withAnimation(.easeInOut(duration: 1.8)) {
+            isReleasing = true
         }
         
         // Reset after animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.9) {
             text = ""
-            isIsReleasing = false
-            currentQuestion = questions.randomElement() ?? questions[0]
+            isReleasing = false
+            currentQuestion = "Let everything out of your mind"
         }
     }
 }
@@ -204,38 +212,47 @@ struct PaperView: View {
     var body: some View {
         Canvas { context, size in
             let rect = CGRect(origin: .zero, size: size)
-            context.fill(Path(rect), with: .color(Color(red: 0.98, green: 0.98, blue: 0.95)))
+            context.fill(Path(rect), with: .color(Color(red: 0.99, green: 0.99, blue: 0.97)))
             
-            // Subtle lines
-            for i in 1...15 {
-                let y = CGFloat(i) * 35
+            // Subtle horizontal lines
+            for i in 1...18 {
+                let y = CGFloat(i) * 40
                 var path = Path()
-                path.move(to: CGPoint(x: 20, y: y))
-                path.addLine(to: CGPoint(x: size.width - 20, y: y))
-                context.stroke(path, with: .color(Color.blue.opacity(0.05)), lineWidth: 1)
+                path.move(to: CGPoint(x: 30, y: y))
+                path.addLine(to: CGPoint(x: size.width - 30, y: y))
+                context.stroke(path, with: .color(Color.blue.opacity(0.04)), lineWidth: 1)
             }
             
-            // Sideline
+            // Vertical margin line
             var sideline = Path()
-            sideline.move(to: CGPoint(x: 60, y: 0))
-            sideline.addLine(to: CGPoint(x: 60, y: size.height))
-            context.stroke(sideline, with: .color(Color.red.opacity(0.1)), lineWidth: 1)
+            sideline.move(to: CGPoint(x: 80, y: 0))
+            sideline.addLine(to: CGPoint(x: 80, y: size.height))
+            context.stroke(sideline, with: .color(Color.red.opacity(0.08)), lineWidth: 1.5)
         }
-        .cornerRadius(5)
+        .cornerRadius(8)
     }
 }
 
-// Custom Geometry Modifier for Crumple Effect
-struct CrumpleModifier: ViewModifier {
+// Custom Geometry Modifier for "Fold and Throw" Effect
+struct FoldAndThrowModifier: ViewModifier {
     var progress: CGFloat
     
     func body(content: Content) -> some View {
+        // We divide the progress: 0.0 -> 0.4 is folding, 0.4 -> 1.0 is throwing
+        let foldProgress = min(1.0, progress / 0.4)
+        let throwProgress = max(0.0, (progress - 0.4) / 0.6)
+        
         content
-            .scaleEffect(1.0 - (progress * 0.9))
-            .rotationEffect(.degrees(progress * 720))
-            .offset(y: progress * 800)
-            .opacity(1.0 - progress)
-            .blur(radius: progress * 10)
+            // Folding phase: Scale down X and Y differently to simulate folding
+            .scaleEffect(x: 1.0 - (foldProgress * 0.7), y: 1.0 - (foldProgress * 0.7))
+            .rotation3DEffect(.degrees(foldProgress * 45), axis: (x: 1, y: 0, z: 0))
+            
+            // Throwing phase: Move and spin wildly
+            .rotationEffect(.degrees(throwProgress * 1080))
+            .scaleEffect(1.0 - (throwProgress * 0.95))
+            .offset(y: throwProgress * 1200)
+            .opacity(1.0 - throwProgress)
+            .blur(radius: throwProgress * 5)
     }
 }
 

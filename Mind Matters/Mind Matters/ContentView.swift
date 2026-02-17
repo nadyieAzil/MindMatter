@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
             }
         } detail: {
-            Text("Select an item")
+            Text("Sila pilih barang weyh")
         }
     }
 

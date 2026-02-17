@@ -74,13 +74,6 @@ struct LetItOutView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Header (Simple display, button moved to safeAreaInset for reliability)
-                Text("Mind Sanctuary")
-                    .font(.system(size: 24, weight: .light, design: .serif))
-                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                    .opacity(0.6)
-                    .padding(.top, 10)
-
                 Spacer()
 
                 // Question Area
@@ -122,7 +115,7 @@ struct LetItOutView: View {
                             .lineSpacing(10)
                             .scrollContentBackground(.hidden)
                             .padding(60)
-                            .frame(maxWidth: 800, maxHeight: 600)
+                            .frame(maxWidth: 800, maxHeight: 750)
                             .background(
                                 PaperView()
                                     .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)

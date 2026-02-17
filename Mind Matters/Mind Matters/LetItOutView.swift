@@ -5,62 +5,7 @@ struct LetItOutView: View {
     @State private var text: String = ""
     @State private var isReleasing: Bool = false
     @State private var currentQuestion: String = "Let everything out of your mind"
-    @State private var showQuestions: Bool = false
     
-    // 50 Deep Emotional Reflections
-    private let questions = [
-        "What is bothering you right now?",
-        "What are you overthinking?",
-        "What are you afraid to say out loud?",
-        "What is one thing you wish people understood about you?",
-        "What was the hardest part of your day?",
-        "Is there a conversation you're avoiding? Why?",
-        "What do you need to forgive yourself for?",
-        "What is a secret you're tired of keeping?",
-        "When did you last feel truly seen?",
-        "What are you holding onto that no longer serves you?",
-        "What is your biggest regret from this past week?",
-        "What part of your future scares you the most?",
-        "If you could change one decision you made, what would it be?",
-        "What does \"peace\" feel like to you right now?",
-        "Who do you miss, even if they're still in your life?",
-        "What is a \"what if\" that keeps you up at night?",
-        "What are you forcing yourself to do that you hate?",
-        "What is the kindest thing you haven't said to someone yet?",
-        "What are you mourning right now?",
-        "What is a dream you've given up on?",
-        "What makes you feel small?",
-        "When do you feel most alone?",
-        "What mask are you wearing today?",
-        "What is a truth you're running away from?",
-        "What is the one thing you're most proud of today?",
-        "What do you wish you could say to your younger self?",
-        "What is a burden you're tired of carrying?",
-        "What does your inner critic keep telling you?",
-        "What is something you've never told anyone?",
-        "What are you most grateful for in this moment?",
-        "What is a fear you're ready to let go of?",
-        "What is a habit you're trying to break?",
-        "What is a boundary you need to set?",
-        "What is a question you're afraid to ask?",
-        "What is a lesson you've learned recently?",
-        "What is a memory that still brings you pain?",
-        "What is a hope you're afraid to share?",
-        "What is a part of yourself you're still learning to love?",
-        "What is a regret you're still carrying?",
-        "What is a need you're not expressing?",
-        "What is a desire you're suppressing?",
-        "What is a feeling you're avoiding?",
-        "What is a thought you're judging?",
-        "What is a belief that is limiting you?",
-        "What is a pattern you're noticing in your life?",
-        "What is a choice you're struggling to make?",
-        "What is a change you're resisting?",
-        "What is a truth you're finally accepting?",
-        "What is a dream you're finally chasing?",
-        "What is a part of your life that feels out of alignment?"
-    ]
-
     var body: some View {
         ZStack {
             // Background
@@ -69,57 +14,56 @@ struct LetItOutView: View {
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
             
-            Color.white.opacity(0.1)
-                .background(.ultraThinMaterial.opacity(0.3))
+            Color.white.opacity(0.12)
+                .background(.ultraThinMaterial.opacity(0.35))
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
+                // Header Space (Reserved for back button)
+                Color.clear.frame(height: 70)
+
                 Spacer()
 
                 // Question Area
-                VStack(spacing: 20) {
+                VStack(spacing: 16) {
                     Text(currentQuestion)
-                        .font(.system(size: 32, weight: .thin, design: .serif))
+                        .font(.system(size: 28, weight: .thin, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, 60)
+                        .padding(.horizontal, 40)
                         .id(currentQuestion)
                         .transition(.opacity)
 
                     Button(action: {
                         withAnimation(.spring()) {
-                            currentQuestion = questions.randomElement() ?? questions[0]
-                            showQuestions = true
+                            currentQuestion = ReflectionQuestions.all.randomElement() ?? ""
                         }
                     }) {
                         Label("Get Random Question", systemImage: "sparkles")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
+                            .font(.system(size: 14, weight: .medium))
                             .foregroundColor(.white)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 28)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 22)
                             .background(
                                 Capsule()
                                     .fill(Color(red: 0.5, green: 0.7, blue: 0.9))
                             )
-                            .shadow(color: .blue.opacity(0.15), radius: 10, x: 0, y: 5)
+                            .shadow(color: .blue.opacity(0.15), radius: 8, x: 0, y: 4)
                     }
                 }
-                .padding(.top, 40)
+                .padding(.bottom, 20)
 
                 // Paper Input Area
                 ZStack {
                     if !isReleasing {
                         TextEditor(text: $text)
-                            .font(.system(size: 22, design: .serif))
-                            .lineSpacing(10)
+                            .font(.system(size: 20, weight: .regular, design: .serif))
+                            .lineSpacing(8)
                             .scrollContentBackground(.hidden)
-                            .padding(60)
-                            .frame(maxWidth: 800)
-                            .frame(height: 850) // Increased height as requested
+                            .padding(EdgeInsets(top: 40, leading: 50, bottom: 40, trailing: 40))
                             .background(
                                 PaperView()
-                                    .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)
+                                    .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 15)
                             )
                             .transition(.asymmetric(
                                 insertion: .opacity,
@@ -127,43 +71,47 @@ struct LetItOutView: View {
                             ))
                     }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 20)
+                .padding(.horizontal, 30)
+                .frame(maxWidth: 800)
+                // Use a flexible frame that adapts to screen height but leaves room for other elements
+                .layoutPriority(1) 
+
+                Spacer()
 
                 // Release Button
-                Button(action: releaseConfession) {
-                    Text("Release Thoughts")
-                        .font(.title3)
-                        .fontWeight(.light)
-                        .foregroundColor(.white)
-                        .frame(width: 260, height: 64)
-                        .background(
-                            ZStack {
-                                Capsule()
-                                    .fill(text.isEmpty ? Color.gray.opacity(0.4) : Color(red: 0.4, green: 0.6, blue: 0.8))
-                                if !text.isEmpty {
+                VStack(spacing: 20) {
+                    Button(action: releaseConfession) {
+                        Text("Release Thoughts")
+                            .font(.title3)
+                            .fontWeight(.light)
+                            .foregroundColor(.white)
+                            .frame(width: 240, height: 60)
+                            .background(
+                                ZStack {
                                     Capsule()
-                                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                                        .fill(text.isEmpty ? Color.gray.opacity(0.4) : Color(red: 0.4, green: 0.6, blue: 0.8))
+                                    if !text.isEmpty {
+                                        Capsule()
+                                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                                    }
                                 }
-                            }
-                        )
-                        .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.3), radius: 20, x: 0, y: 10)
+                            )
+                            .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.2), radius: 15, x: 0, y: 8)
+                    }
+                    .disabled(text.isEmpty || isReleasing)
+                    
+                    // Trash Bin Indicator
+                    if isReleasing {
+                        Image(systemName: "trash.circle.fill")
+                            .font(.system(size: 80))
+                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.2))
+                            .transition(.scale.combined(with: .opacity))
+                    } else {
+                        Color.clear.frame(height: 80)
+                    }
                 }
-                .disabled(text.isEmpty || isReleasing)
-                .padding(.bottom, 40)
-                
-                // Digital Trash Bin Indicator
-                if isReleasing {
-                    Image(systemName: "trash.circle.fill")
-                        .font(.system(size: 80))
-                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.2))
-                        .transition(.scale.combined(with: .opacity))
-                        .offset(y: -20)
-                } else {
-                    Color.clear.frame(height: 80)
-                }
+                .padding(.bottom, 30)
             }
-            .padding()
         }
         .navigationBarHidden(true)
         .safeAreaInset(edge: .top) {
@@ -173,61 +121,56 @@ struct LetItOutView: View {
                         Image(systemName: "chevron.left")
                         Text("Back to Main Page")
                     }
-                    .font(.headline)
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
                     .background(.ultraThinMaterial)
-                    .cornerRadius(30)
-                    .shadow(color: .black.opacity(0.1), radius: 10)
+                    .cornerRadius(25)
+                    .shadow(color: .black.opacity(0.08), radius: 8)
                 }
                 Spacer()
             }
-            .padding(.leading, 30)
-            .padding(.top, 20)
+            .padding(.leading, 20)
+            .padding(.top, 10)
         }
     }
     
     private func releaseConfession() {
-        withAnimation(.easeInOut(duration: 1.5)) {
+        withAnimation(.easeInOut(duration: 1.4)) {
             isReleasing = true
         }
         
-        // Reset after animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             text = ""
             isReleasing = false
             currentQuestion = "Let everything out of your mind"
-            showQuestions = false
         }
     }
 }
 
-// Geometric "Paper" background
 struct PaperView: View {
     var body: some View {
         Canvas { context, size in
             let rect = CGRect(origin: .zero, size: size)
             context.fill(Path(rect), with: .color(Color(red: 0.99, green: 0.99, blue: 0.98)))
             
-            // Subtle horizontal lines
-            let lineSpacing: CGFloat = 38
+            let lineSpacing: CGFloat = 36
             let numberOfLines = Int(size.height / lineSpacing)
             for i in 1...numberOfLines {
                 let y = CGFloat(i) * lineSpacing
                 var path = Path()
-                path.move(to: CGPoint(x: 40, y: y))
-                path.addLine(to: CGPoint(x: size.width - 40, y: y))
+                path.move(to: CGPoint(x: 35, y: y))
+                path.addLine(to: CGPoint(x: size.width - 35, y: y))
                 context.stroke(path, with: .color(Color.blue.opacity(0.03)), lineWidth: 1)
             }
             
-            // Vertical margin line
             var sideline = Path()
-            sideline.move(to: CGPoint(x: 90, y: 0))
-            sideline.addLine(to: CGPoint(x: 90, y: size.height))
-            context.stroke(sideline, with: .color(Color.red.opacity(0.06)), lineWidth: 1.5)
+            sideline.move(to: CGPoint(x: 80, y: 0))
+            sideline.addLine(to: CGPoint(x: 80, y: size.height))
+            context.stroke(sideline, with: .color(Color.red.opacity(0.05)), lineWidth: 1.2)
         }
-        .cornerRadius(12)
+        .cornerRadius(10)
     }
 }
 

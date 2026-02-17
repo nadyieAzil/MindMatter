@@ -108,34 +108,27 @@ struct LetItOutView: View {
                 .padding(.top, 40)
 
                 // Paper Input Area
-                GeometryReader { geometry in
-                    ZStack {
-                        if !isReleasing {
-                            TextEditor(text: $text)
-                                .font(.system(size: 22, design: .serif))
-                                .lineSpacing(10)
-                                .scrollContentBackground(.hidden)
-                                .padding(60)
-                                .frame(maxWidth: 800)
-                                .frame(height: geometry.size.height * 0.9) // Use 90% of available height
-                                .background(
-                                    PaperView()
-                                        .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)
-                                )
-                                .transition(.asymmetric(
-                                    insertion: .opacity,
-                                    removal: .modifier(
-                                        active: FoldAndThrowModifier(progress: 1.0),
-                                        identity: FoldAndThrowModifier(progress: 0.0)
-                                    )
-                                ))
-                        }
+                ZStack {
+                    if !isReleasing {
+                        TextEditor(text: $text)
+                            .font(.system(size: 22, design: .serif))
+                            .lineSpacing(10)
+                            .scrollContentBackground(.hidden)
+                            .padding(60)
+                            .frame(maxWidth: 800)
+                            .frame(height: 850) // Increased height as requested
+                            .background(
+                                PaperView()
+                                    .shadow(color: .black.opacity(0.1), radius: 30, x: 0, y: 20)
+                            )
+                            .transition(.asymmetric(
+                                insertion: .opacity,
+                                removal: .scale.combined(with: .opacity).combined(with: .offset(y: 800))
+                            ))
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 20)
-                .frame(maxHeight: 800) // Caps the height for large displays like Mac/iPad Pro
 
                 // Release Button
                 Button(action: releaseConfession) {
@@ -196,12 +189,12 @@ struct LetItOutView: View {
     }
     
     private func releaseConfession() {
-        withAnimation(.easeInOut(duration: 2.2)) {
+        withAnimation(.easeInOut(duration: 1.5)) {
             isReleasing = true
         }
         
         // Reset after animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
             text = ""
             isReleasing = false
             currentQuestion = "Let everything out of your mind"
@@ -236,39 +229,6 @@ struct PaperView: View {
         }
         .cornerRadius(12)
     }
-}
-
-// Custom Geometry Modifier for "Fold and Throw" Effect
-struct FoldAndThrowModifier: ViewModifier {
-    var progress: CGFloat
-    
-    func body(content: Content) -> some View {
-        // Phase 1: Fold towards center (0.0 -> 0.3)
-        let foldXProgress = min(1.0, progress / 0.3)
-        // Phase 2: Fold into square (0.3 -> 0.5)
-        let foldYProgress = max(0.0, min(1.0, (progress - 0.3) / 0.2))
-        // Phase 3: Throw away (0.5 -> 1.0)
-        let throwProgress = max(0.0, (progress - 0.5) / 0.5)
-        
-        content
-            // Sequence of folds
-            .scaleEffect(x: 1.0 - (foldXProgress * 0.9))
-            .rotation3DEffect(.degrees(foldXProgress * 90), axis: (x: 0, y: 1, z: 0))
-            
-            .scaleEffect(y: 1.0 - (foldYProgress * 0.85))
-            .rotation3DEffect(.degrees(foldYProgress * 90), axis: (x: 1, y: 0, z: 0))
-            
-            // Throw effect
-            .rotationEffect(.degrees(throwProgress * 1800))
-            .offset(y: throwProgress * 1600)
-            .scaleEffect(1.0 - (throwProgress * 0.95))
-            .opacity(1.0 - throwProgress)
-            .blur(radius: throwProgress * 10)
-    }
-}
-
-#Preview {
-    LetItOutView()
 }
 
 #Preview {

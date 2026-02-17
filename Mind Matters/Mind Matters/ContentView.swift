@@ -36,6 +36,7 @@ struct ContentView: View {
             }
         } detail: {
             Text("Sila pilih barang weyh")
+            Text("Hai saya nadyie azil")
         }
     }
 

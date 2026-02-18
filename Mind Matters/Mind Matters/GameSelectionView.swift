@@ -6,69 +6,74 @@ struct GameSelectionView: View {
     var body: some View {
         ZStack {
             // Background
-            Image("WelcomeWallpaper") // Dynamic background could be added later
+            Image("WelcomeWallpaper")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
-                .blur(radius: 10)
+                .blur(radius: 12)
             
-            Color.white.opacity(0.2)
+            Color.white.opacity(0.15)
                 .background(.ultraThinMaterial)
                 .ignoresSafeArea()
             
-            VStack(spacing: 40) {
+            VStack(spacing: 0) {
                 // Header
                 HStack {
                     Button(action: {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 24, weight: .medium))
+                            .font(.system(size: 22, weight: .semibold))
                             .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                            .padding()
+                            .padding(12)
                             .background(Circle().fill(.ultraThinMaterial))
+                            .shadow(color: .black.opacity(0.05), radius: 5)
                     }
                     
                     Spacer()
                     
-                    Text("Mini Games")
-                        .font(.system(size: 34, weight: .thin, design: .serif))
+                    Text("Choose Your Calm")
+                        .font(.system(size: 32, weight: .thin, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
                     
                     Spacer()
                     
-                    // Invisible spacer for centering
-                    Circle().fill(.clear).frame(width: 50)
+                    // Balanced spacer
+                    Circle().fill(.clear).frame(width: 46)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 25)
                 .padding(.top, 20)
+                .padding(.bottom, 40)
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 25) {
+                // Horizontal Game Selection
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 30) {
                         GameCard(
                             title: "Water Ripple",
-                            description: "Symbolizes calm. No competition, just presence.",
+                            description: "Symbolizes calm. No competition, no pressure. Just flow with the gentle ripples.",
                             icon: "drop.circle.fill",
                             color: Color(red: 0.4, green: 0.6, blue: 0.9)
                         )
                         
                         GameCard(
                             title: "Infinite Roll",
-                            description: "A seamless loop of silk and ancient paper.",
+                            description: "A seamless loop of silk and ancient paper. A rhythmic journey for the mind.",
                             icon: "scroll.fill",
                             color: Color(red: 0.7, green: 0.5, blue: 0.3)
                         )
                         
                         GameCard(
                             title: "Sand Sweep",
-                            description: "Clearing mess, clearing mind. Emotionally symbolic.",
+                            description: "Clearing mess is clearing the mind. A symbolic gesture of peace and renewal.",
                             icon: "leaf.fill",
                             color: Color(red: 0.6, green: 0.7, blue: 0.4)
                         )
                     }
-                    .padding(.horizontal)
-                    .padding(.bottom, 40)
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 20)
                 }
+                
+                Spacer()
             }
         }
         .navigationBarHidden(true)
@@ -87,46 +92,62 @@ struct GameCard: View {
         Button(action: {
             print("\(title) selected")
         }) {
-            HStack(spacing: 20) {
+            VStack(spacing: 25) {
+                // Large Icon Circle
                 ZStack {
                     Circle()
-                        .fill(color.opacity(0.2))
-                        .frame(width: 70, height: 70)
+                        .fill(color.opacity(0.15))
+                        .frame(width: 120, height: 120)
+                        .overlay(
+                            Circle()
+                                .stroke(color.opacity(0.3), lineWidth: 1)
+                        )
                     
                     Image(systemName: icon)
-                        .font(.system(size: 30))
+                        .font(.system(size: 50))
                         .foregroundColor(color)
+                        .shadow(color: color.opacity(0.3), radius: 10, x: 0, y: 5)
                 }
                 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(spacing: 12) {
                     Text(title)
-                        .font(.system(size: 22, weight: .medium, design: .rounded))
+                        .font(.system(size: 28, weight: .light, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.2, blue: 0.4))
                     
                     Text(description)
-                        .font(.system(size: 15, weight: .light))
+                        .font(.system(size: 16, weight: .light))
                         .foregroundColor(Color(red: 0.2, green: 0.3, blue: 0.5))
-                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(4)
+                        .frame(height: 80) // Fixed height for alignment
                 }
                 
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color.black.opacity(0.2))
+                // Subtle "Start" indicator
+                HStack {
+                    Text("Enter Room")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(color)
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(color)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(color.opacity(0.1).cornerRadius(20))
             }
-            .padding(20)
+            .padding(35)
+            .frame(width: 300, height: 450)
             .background(
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: 40)
                     .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(Color.white.opacity(0.5), lineWidth: 1.5)
                     )
             )
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-            .scaleEffect(isPressing ? 0.98 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressing)
+            .shadow(color: Color.black.opacity(0.08), radius: 20, x: 0, y: 10)
+            .scaleEffect(isPressing ? 0.97 : 1.0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isPressing)
         }
         .buttonStyle(PlainButtonStyle())
         .simultaneousGesture(

@@ -71,28 +71,28 @@ struct GameSelectionView: View {
                 Spacer() // Extra weight at the bottom to slightly uplift the center line
             }
             
-            // Back Button Overlay (Fixed at top left)
-            VStack {
-                HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
+        }
+        .navigationBarHidden(true)
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Button(action: { dismiss() }) {
+                    HStack(spacing: 8) {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                            .padding(10)
-                            .background(Circle().fill(.ultraThinMaterial))
-                            .shadow(color: .black.opacity(0.05), radius: 5)
+                        Text("Back to Main Page")
                     }
-                    .padding(.leading, 25)
-                    .padding(.top, 20)
-                    
-                    Spacer()
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(25)
+                    .shadow(color: .black.opacity(0.08), radius: 8)
                 }
                 Spacer()
             }
+            .padding(.leading, 20)
+            .padding(.top, 10)
         }
-        .navigationBarHidden(true)
     }
 }
 

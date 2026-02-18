@@ -17,48 +17,30 @@ struct GameSelectionView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
+                // Top Spacer to push everything down
+                Spacer()
+                
                 // Header
-                HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                            .padding(10)
-                            .background(Circle().fill(.ultraThinMaterial))
-                            .shadow(color: .black.opacity(0.05), radius: 5)
-                    }
+                VStack(spacing: 8) {
+                    Text("Relaxing Game")
+                        .font(.system(size: 38, weight: .thin, design: .serif))
+                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
                     
-                    Spacer()
-                    
-                    VStack(spacing: 4) {
-                        Text("Relaxing Game")
-                            .font(.system(size: 36, weight: .thin, design: .serif))
-                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                        
-                        Text("Choose Your Game")
-                            .font(.system(size: 16, weight: .light, design: .rounded))
-                            .foregroundColor(Color(red: 0.2, green: 0.4, blue: 0.6))
-                    }
-                    
-                    Spacer()
-                    
-                    // Balanced spacer
-                    Circle().fill(.clear).frame(width: 40)
+                    Text("Choose Your Game")
+                        .font(.system(size: 16, weight: .light, design: .rounded))
+                        .foregroundColor(Color(red: 0.2, green: 0.4, blue: 0.6))
                 }
-                .padding(.horizontal, 25)
-                .padding(.top, 20)
-                .padding(.bottom, 20)
+                .padding(.horizontal)
 
+                // Equal Gap between Header and Cards
                 Spacer()
 
                 // Horizontal Game Selection
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 30) {
+                    HStack(spacing: 35) {
                         GameCard(
                             title: "Water Ripple",
-                            description: "Symbolizes calm. No competition, no pressure. Just flow with the gentle ripples.",
+                            description: "Symbolizes calm. No competition, no pressure. Just flow with the ripples.",
                             icon: "drop.circle.fill",
                             color: Color(red: 0.4, green: 0.6, blue: 0.9)
                         )
@@ -78,11 +60,33 @@ struct GameSelectionView: View {
                         )
                     }
                     .padding(.horizontal, 40)
-                    .frame(minWidth: UIScreen.main.bounds.width) // Helps center content if small
+                    .frame(minWidth: UIScreen.main.bounds.width, alignment: .center)
                 }
-                .frame(maxHeight: 420)
+                .frame(maxHeight: 380) // Match card height
                 
+                // Bottom Spacer to balance the top
                 Spacer()
+                Spacer() // Extra weight at the bottom to slightly uplift the center line
+            }
+            
+            // Back Button Overlay (Fixed at top left)
+            VStack {
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                            .padding(10)
+                            .background(Circle().fill(.ultraThinMaterial))
+                            .shadow(color: .black.opacity(0.05), radius: 5)
+                    }
+                    .padding(.leading, 25)
+                    .padding(.top, 20)
+                    
+                    Spacer()
+                }
                 Spacer()
             }
         }
@@ -109,30 +113,30 @@ struct GameCard: View {
                 ZStack {
                     Circle()
                         .fill(color.opacity(0.12))
-                        .frame(width: 100, height: 100)
+                        .frame(width: 90, height: 90)
                         .overlay(
                             Circle()
                                 .stroke(color.opacity(0.2), lineWidth: 1)
                         )
                     
                     Image(systemName: icon)
-                        .font(.system(size: 44))
+                        .font(.system(size: 40))
                         .foregroundColor(color)
                 }
                 
-                Spacer(minLength: 25) // Pushing the title down
+                Spacer(minLength: 30) // Increased spacer to push title down
                 
                 VStack(spacing: 10) {
                     Text(title)
-                        .font(.system(size: 26, weight: .light, design: .serif))
+                        .font(.system(size: 24, weight: .light, design: .serif))
                         .foregroundColor(Color(red: 0.1, green: 0.2, blue: 0.4))
                     
                     Text(description)
-                        .font(.system(size: 15, weight: .light))
+                        .font(.system(size: 14, weight: .light))
                         .foregroundColor(Color(red: 0.2, green: 0.3, blue: 0.5))
                         .multilineTextAlignment(.center)
-                        .lineSpacing(3)
-                        .frame(height: 70)
+                        .lineSpacing(2)
+                        .frame(height: 60)
                 }
                 
                 Spacer(minLength: 15)
@@ -140,29 +144,29 @@ struct GameCard: View {
                 // Subtle "Start" indicator
                 HStack {
                     Text("Enter Room")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: 13, weight: .medium))
                         .foregroundColor(color)
                     Image(systemName: "arrow.right")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 11, weight: .bold))
                         .foregroundColor(color)
                 }
-                .padding(.horizontal, 18)
-                .padding(.vertical, 8)
-                .background(color.opacity(0.08).cornerRadius(18))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 7)
+                .background(color.opacity(0.08).cornerRadius(15))
                 
                 Spacer(minLength: 25)
             }
-            .padding(.horizontal, 30)
-            .frame(width: 280, height: 380) // Height reduced to 380, width reduced to 280 for better centering
+            .padding(.horizontal, 25)
+            .frame(width: 260, height: 380) 
             .background(
-                RoundedRectangle(cornerRadius: 35)
+                RoundedRectangle(cornerRadius: 32)
                     .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 35)
-                            .stroke(Color.white.opacity(0.4), lineWidth: 1.2)
+                        RoundedRectangle(cornerRadius: 32)
+                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
                     )
             )
-            .shadow(color: Color.black.opacity(0.06), radius: 15, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 6)
             .scaleEffect(isPressing ? 0.97 : 1.0)
             .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isPressing)
         }

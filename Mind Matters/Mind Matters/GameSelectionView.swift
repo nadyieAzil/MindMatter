@@ -36,33 +36,35 @@ struct GameSelectionView: View {
                 Spacer()
 
                 // Horizontal Game Selection
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 35) {
-                        GameCard(
-                            title: "Water Ripple",
-                            description: "Symbolizes calm. No competition, no pressure. Just flow with the ripples.",
-                            icon: "drop.circle.fill",
-                            color: Color(red: 0.4, green: 0.6, blue: 0.9)
-                        )
-                        
-                        GameCard(
-                            title: "Infinite Roll",
-                            description: "A seamless loop of silk and ancient paper. A rhythmic journey for the mind.",
-                            icon: "scroll.fill",
-                            color: Color(red: 0.7, green: 0.5, blue: 0.3)
-                        )
-                        
-                        GameCard(
-                            title: "Sand Sweep",
-                            description: "Clearing mess is clearing the mind. A symbolic gesture of peace and renewal.",
-                            icon: "leaf.fill",
-                            color: Color(red: 0.6, green: 0.7, blue: 0.4)
-                        )
+                GeometryReader { geometry in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 35) {
+                            GameCard(
+                                title: "Water Ripple",
+                                description: "Symbolizes calm. No competition, no pressure. Just flow with the ripples.",
+                                icon: "drop.circle.fill",
+                                color: Color(red: 0.4, green: 0.6, blue: 0.9)
+                            )
+                            
+                            GameCard(
+                                title: "Infinite Roll",
+                                description: "A seamless loop of silk and ancient paper. A rhythmic journey for the mind.",
+                                icon: "scroll.fill",
+                                color: Color(red: 0.7, green: 0.5, blue: 0.3)
+                            )
+                            
+                            GameCard(
+                                title: "Sand Sweep",
+                                description: "Clearing mess is clearing the mind. A symbolic gesture of peace and renewal.",
+                                icon: "leaf.fill",
+                                color: Color(red: 0.6, green: 0.7, blue: 0.4)
+                            )
+                        }
+                        .padding(.horizontal, 40)
+                        .frame(minWidth: geometry.size.width, alignment: .center)
                     }
-                    .padding(.horizontal, 40)
-                    .frame(minWidth: UIScreen.main.bounds.width, alignment: .center)
                 }
-                .frame(maxHeight: 380) // Match card height
+                .frame(height: 380) // Match card height and constrain GeometryReader
                 
                 // Bottom Spacer to balance the top
                 Spacer()

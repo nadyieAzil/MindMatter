@@ -37,11 +37,13 @@ struct WelcomeView: View {
 
                     // Responsive Button Layout
                     AdaptiveStack(spacing: 30) {
-                        WelcomeButton(
-                            title: "Relaxing-Game",
-                            icon: "gamecontroller",
-                            color: Color(red: 0.5, green: 0.7, blue: 0.9)
-                        )
+                        NavigationLink(destination: GameSelectionView()) {
+                            WelcomeButtonContent(
+                                title: "Relaxing-Game",
+                                icon: "gamecontroller"
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
                         
                         NavigationLink(destination: LetItOutView()) {
                             WelcomeButtonContent(

@@ -82,27 +82,28 @@ struct PaperRollGameView: View {
                     currentBottom = startBottom
                 }
             }
-            .zIndex(0) // Paper is always behind
+            .zIndex(0)
             
-            // 2. BREATHING GUIDE LAYER (Root Center)
+            // 2. BREATHING GUIDE LAYER (Root Center/Bottom)
             if showBreathingGuide {
-                ZStack {
+                VStack {
+                    Spacer()
                     ZStack {
                         Circle()
-                            .stroke(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.3), lineWidth: 2)
-                            .frame(width: 220, height: 220)
+                            .stroke(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.1), lineWidth: 1)
+                            .frame(width: 240, height: 240)
                         
                         Circle()
-                            .fill(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.15))
-                            .frame(width: 180 * breathingScale, height: 180 * breathingScale)
-                            .blur(radius: 10)
+                            .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.05))
+                            .frame(width: 200 * breathingScale, height: 200 * breathingScale)
+                            .blur(radius: 12)
                         
                         Text(breathingText)
-                            .font(.system(size: 28, weight: .medium, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
+                            .font(.system(size: 28, weight: .ultraLight, design: .serif))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
                     }
+                    .padding(.bottom, 160) // Positioned above progress bar but below center
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .allowsHitTesting(false)
                 .zIndex(5)
             }
@@ -113,16 +114,16 @@ struct PaperRollGameView: View {
                     Spacer()
                     ZStack(alignment: .leading) {
                         Capsule()
-                            .fill(Color.black.opacity(0.08))
-                            .frame(width: 300, height: 12)
+                            .fill(Color.black.opacity(0.06))
+                            .frame(width: 300, height: 10)
                         
                         let progress = calculateProgress(rootHeight: rootGeo.size.height)
                         Capsule()
-                            .fill(Color(red: 0.0, green: 0.5, blue: 1.0))
-                            .frame(width: 300 * progress, height: 12)
-                            .shadow(color: Color.blue.opacity(0.3), radius: 8, y: 3)
+                            .fill(Color(red: 0.0, green: 0.48, blue: 1.0))
+                            .frame(width: 300 * progress, height: 10)
+                            .shadow(color: Color.blue.opacity(0.2), radius: 6, y: 2)
                     }
-                    .padding(.bottom, rootGeo.safeAreaInsets.bottom + 50)
+                    .padding(.bottom, rootGeo.safeAreaInsets.bottom + 35) // Lowered per request
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .allowsHitTesting(false)
@@ -139,10 +140,10 @@ struct PaperRollGameView: View {
                             Text("Exit")
                         }
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(.ultraThinMaterial.opacity(0.7))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 15)
+                        .background(.ultraThinMaterial.opacity(0.5))
                         .cornerRadius(20)
                     }
                     
@@ -151,9 +152,7 @@ struct PaperRollGameView: View {
                     // Center: Refill
                     Button(action: {
                         withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
-                            // Reset bottom to initial tab position
-                            // Note: startBottom is calculated in GeometryReader, so we need a rough fallback or pass it
-                             currentBottom = 0 // Will trigger the "startBottom" fallback in view
+                             currentBottom = 0 
                              velocity = 0
                         }
                     }) {
@@ -162,20 +161,20 @@ struct PaperRollGameView: View {
                             Text("Refill Paper")
                                 .font(.system(size: 14, weight: .semibold))
                         }
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(.ultraThinMaterial.opacity(0.7))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 15)
+                        .background(.ultraThinMaterial.opacity(0.5))
                         .cornerRadius(20)
                     }
                     
                     Spacer()
                     
                     // Right: Title & Toggle
-                    VStack(alignment: .trailing, spacing: 10) {
+                    VStack(alignment: .trailing, spacing: 8) {
                         Text("Paper Roll")
-                            .font(.system(size: 24, weight: .thin, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
+                            .font(.system(size: 22, weight: .thin, design: .serif))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.4))
                         
                         Button(action: {
                             withAnimation(.spring()) {
@@ -183,15 +182,15 @@ struct PaperRollGameView: View {
                             }
                         }) {
                             Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                .font(.system(size: 20))
-                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                                .padding(12)
-                                .background(.ultraThinMaterial.opacity(0.7))
+                                .font(.system(size: 18))
+                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
+                                .padding(10)
+                                .background(.ultraThinMaterial.opacity(0.5))
                                 .clipShape(Circle())
                         }
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 25)
                 .padding(.top, 20)
                 Spacer()
             }
@@ -259,29 +258,29 @@ struct PaperSheetView: View {
         ZStack(alignment: .topLeading) {
             Color.white
             Canvas { context, size in
-                for _ in 0..<3000 {
+                for _ in 0..<3500 {
                     let rect = CGRect(x: CGFloat.random(in: 0...size.width), y: CGFloat.random(in: 0...size.height), width: 1, height: 1)
                     context.fill(Path(ellipseIn: rect), with: .color(.black.opacity(0.02)))
                 }
             }
             Rectangle()
-                .fill(Color.red.opacity(0.3))
+                .fill(Color.red.opacity(0.35))
                 .frame(width: 1.5)
-                .padding(.leading, 60)
+                .padding(.leading, 65)
             VStack(spacing: 30) {
                 ForEach(0..<Int(height / 30) + 1, id: \.self) { _ in
                     Rectangle().fill(Color.blue.opacity(0.1)).frame(height: 1)
                 }
             }
             HStack {
-                LinearGradient(gradient: Gradient(colors: [.black.opacity(0.04), .clear]), startPoint: .leading, endPoint: .trailing).frame(width: 12)
+                LinearGradient(gradient: Gradient(colors: [.black.opacity(0.05), .clear]), startPoint: .leading, endPoint: .trailing).frame(width: 12)
                 Spacer()
-                LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.04)]), startPoint: .leading, endPoint: .trailing).frame(width: 12)
+                LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.05)]), startPoint: .leading, endPoint: .trailing).frame(width: 12)
             }
         }
         .frame(width: totalWidth - 40, height: height)
         .cornerRadius(2, corners: [.bottomLeft, .bottomRight])
-        .shadow(color: .black.opacity(0.1), radius: 10, y: 5)
+        .shadow(color: .black.opacity(0.1), radius: 12, y: 5)
     }
 }
 

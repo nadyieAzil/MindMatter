@@ -23,7 +23,9 @@ struct PaperRollGameView: View {
     var body: some View {
         GeometryReader { geometry in
             let viewportHeight = geometry.size.height
+            let viewportWidth = geometry.size.width
             let startBottom = viewportHeight * 0.45 // Initial unrolled tab height
+            let activeBottom = (currentBottom == 0 ? startBottom : currentBottom)
             
             ZStack(alignment: .top) {
                 // 1. Desk Background (Bottom Layer)
@@ -32,8 +34,8 @@ struct PaperRollGameView: View {
                 
                 // 2. Paper Sheet content
                 // We show the paper descending from the top.
-                PaperSheetView(height: totalPaperLength)
-                    .offset(y: -totalPaperLength + (currentBottom == 0 ? startBottom : currentBottom))
+                PaperSheetView(height: totalPaperLength, totalWidth: viewportWidth)
+                    .offset(y: -totalPaperLength + activeBottom)
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
@@ -72,58 +74,16 @@ struct PaperRollGameView: View {
                     )
                 
                 // 3. Instructional Text (Moves with the bottom edge)
-                let activeBottom = (currentBottom == 0 ? startBottom : currentBottom)
                 if activeBottom < viewportHeight + 100 {
                     Text("pull me down")
-                        .font(.system(size: 22, weight: .light, design: .serif))
+                        .font(.system(size: 24, weight: .light, design: .serif))
                         .foregroundColor(Color.black.opacity(0.6))
-                        .offset(y: activeBottom - 60)
+                        .offset(y: activeBottom - 70)
                         .allowsHitTesting(false)
                         .opacity(Double(max(0, 1.0 - (activeBottom - startBottom) / 300)))
                 }
                 
-                // --- TOP LAYERS (Always visible) ---
-                
-                // 4. Breathing Guide (Centered)
-                if showBreathingGuide {
-                    ZStack {
-                        Circle()
-                            .stroke(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.15), lineWidth: 1)
-                            .frame(width: 240, height: 240)
-                        
-                        Circle()
-                            .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.12))
-                            .frame(width: 200 * breathingScale, height: 200 * breathingScale)
-                            .blur(radius: 12)
-                        
-                        Text(breathingText)
-                            .font(.system(size: 26, weight: .light, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .allowsHitTesting(false)
-                }
-                
-                // 5. Blue Progress Bar (Bottom Center)
-                VStack {
-                    Spacer()
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color(red: 0.9, green: 0.9, blue: 0.9))
-                            .frame(width: 280, height: 10)
-                        
-                        let progress = min(1.0, max(0.0, (activeBottom - startBottom) / (totalPaperLength - startBottom)))
-                        Capsule()
-                            .fill(Color(red: 0.0, green: 0.48, blue: 1.0)) // Vibrant Blue
-                            .frame(width: 280 * progress, height: 10)
-                            .shadow(color: Color.blue.opacity(0.2), radius: 6, x: 0, y: 2)
-                    }
-                    .padding(.bottom, 60)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .allowsHitTesting(false)
-                
-                // 6. Header
+                // 4. Header (pinned to top)
                 VStack {
                     ZStack(alignment: .top) {
                         // Left: Exit
@@ -189,10 +149,54 @@ struct PaperRollGameView: View {
                     }
                     .padding(.horizontal, 25)
                     .padding(.top, 20)
-                    
                     Spacer()
                 }
             }
+            // --- TOP-MOST OVERLAYS (Guaranteed Visibility) ---
+            .overlay(
+                // 5. Breathing Guide (Centered)
+                ZStack {
+                    if showBreathingGuide {
+                        ZStack {
+                            Circle()
+                                .stroke(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.35), lineWidth: 1.5)
+                                .frame(width: 240, height: 240)
+                            
+                            Circle()
+                                .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.25))
+                                .frame(width: 200 * breathingScale, height: 200 * breathingScale)
+                                .blur(radius: 15)
+                            
+                            Text(breathingText)
+                                .font(.system(size: 28, weight: .medium, design: .serif))
+                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
+                        }
+                        .transition(.opacity)
+                    }
+                }
+                .allowsHitTesting(false)
+                .zIndex(100)
+            )
+            .overlay(
+                // 6. Blue Progress Bar (Bottom Center)
+                VStack {
+                    Spacer()
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.1))
+                            .frame(width: 300, height: 12)
+                        
+                        let progress = min(1.0, max(0.0, (activeBottom - startBottom) / (totalPaperLength - startBottom)))
+                        Capsule()
+                            .fill(Color(red: 0.0, green: 0.5, blue: 1.0)) // Bright Zen Blue
+                            .frame(width: 300 * progress, height: 12)
+                            .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 2)
+                    }
+                    .padding(.bottom, geometry.safeAreaInsets.bottom + 40)
+                }
+                .allowsHitTesting(false)
+                .zIndex(101)
+            )
             .navigationBarHidden(true)
             .onAppear {
                 currentBottom = startBottom
@@ -258,6 +262,7 @@ struct PaperRollGameView: View {
 
 struct PaperSheetView: View {
     let height: CGFloat
+    let totalWidth: CGFloat
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -285,7 +290,8 @@ struct PaperSheetView: View {
             
             // Horizontal Blue Lines
             VStack(spacing: 30) {
-                ForEach(0..<Int(height / 30), id: \.self) { _ in
+                // Ensure enough lines for the total height
+                ForEach(0..<Int(height / 30) + 1, id: \.self) { _ in
                     Rectangle()
                         .fill(Color.blue.opacity(0.1))
                         .frame(height: 1)
@@ -301,9 +307,9 @@ struct PaperSheetView: View {
                     .frame(width: 12)
             }
         }
-        .frame(width: UIScreen.main.bounds.width - 40, height: height)
+        .frame(width: totalWidth - 60, height: height)
         .cornerRadius(2, corners: [.bottomLeft, .bottomRight])
-        .shadow(color: .black.opacity(0.1), radius: 12, x: 0, y: 5)
+        .shadow(color: .black.opacity(0.12), radius: 15, x: 0, y: 5)
     }
 }
 

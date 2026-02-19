@@ -3,7 +3,7 @@ import SwiftUI
 struct SandPoint: Identifiable {
     let id = UUID()
     let location: CGPoint
-    var age: Double = 0
+    let createdAt = Date()
 }
 
 struct SandSweepGameView: View {
@@ -13,6 +13,7 @@ struct SandSweepGameView: View {
     @State private var trails: [[SandPoint]] = []
     @State private var currentTrail: [SandPoint] = []
     @State private var hapticGenerator = UIImpactFeedbackGenerator(style: .light)
+    @State private var isFadeMode = false
     
     // Breathing state
     @State private var breathingScale: CGFloat = 1.0
@@ -42,29 +43,44 @@ struct SandSweepGameView: View {
             .ignoresSafeArea()
             .allowsHitTesting(false)
             
-            // Drawing Canvas
-            Canvas { context, size in
-                for trail in (trails + [currentTrail]) {
-                    if trail.count > 1 {
-                        var path = Path()
-                        path.move(to: trail[0].location)
-                        for i in 1..<trail.count {
-                            path.addLine(to: trail[i].location)
+            // Drawing Canvas with Fade Logic
+            TimelineView(.animation) { timeline in
+                Canvas { context, size in
+                    let now = timeline.date
+                    
+                    // Filter and Draw trails
+                    let activeTrails = isFadeMode ? trails.map { trail in
+                        trail.filter { now.timeIntervalSince($0.createdAt) < 5.0 }
+                    }.filter { !$0.isEmpty } : trails
+                    
+                    let activeCurrent = isFadeMode ? currentTrail.filter { now.timeIntervalSince($0.createdAt) < 5.0 } : currentTrail
+                    
+                    for trail in (activeTrails + [activeCurrent]) {
+                        if trail.count > 1 {
+                            var path = Path()
+                            path.move(to: trail[0].location)
+                            for i in 1..<trail.count {
+                                path.addLine(to: trail[i].location)
+                            }
+                            
+                            // Calculate global opacity based on age if in fade mode
+                            let trailAge = now.timeIntervalSince(trail.first?.createdAt ?? now)
+                            let opacity = isFadeMode ? max(0, 1.0 - (trailAge / 5.0)) : 1.0
+                            
+                            // Main Rake Trail
+                            context.stroke(
+                                path,
+                                with: .color(rakeColor.opacity(opacity)),
+                                style: StrokeStyle(lineWidth: 25, lineCap: .round, lineJoin: .round)
+                            )
+                            
+                            // Inner "Groove" Lines
+                            context.stroke(
+                                path,
+                                with: .color(rakeColor.opacity(0.3 * opacity)),
+                                style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [2, 10])
+                            )
                         }
-                        
-                        // Main Rake Trail
-                        context.stroke(
-                            path,
-                            with: .color(rakeColor),
-                            style: StrokeStyle(lineWidth: 25, lineCap: .round, lineJoin: .round)
-                        )
-                        
-                        // Inner "Groove" Lines
-                        context.stroke(
-                            path,
-                            with: .color(rakeColor.opacity(0.3)),
-                            style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [2, 10])
-                        )
                     }
                 }
             }
@@ -87,8 +103,8 @@ struct SandSweepGameView: View {
                         trails.append(currentTrail)
                         currentTrail = []
                         
-                        // Cleanup to keep performance smooth
-                        if trails.count > 15 {
+                        // Cleanup to keep performance smooth (non-fade mode)
+                        if !isFadeMode && trails.count > 25 {
                             trails.removeFirst()
                         }
                     }
@@ -122,45 +138,88 @@ struct SandSweepGameView: View {
             
             // Header & Controls
             VStack {
-                HStack(alignment: .top) {
-                    Button(action: { dismiss() }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chevron.left")
-                            Text("Exit")
+                ZStack(alignment: .top) {
+                    // Left: Exit
+                    HStack {
+                        Button(action: { dismiss() }) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "chevron.left")
+                                Text("Exit")
+                            }
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 18)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(25)
+                            .shadow(color: .black.opacity(0.05), radius: 8)
                         }
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 18)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(25)
-                        .shadow(color: .black.opacity(0.05), radius: 8)
+                        Spacer()
                     }
                     
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 10) {
-                        Text("Sand Sweep")
-                            .font(.system(size: 24, weight: .thin, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
-                        
+                    // Center: Reset & Mode
+                    HStack(spacing: 15) {
                         Button(action: {
                             withAnimation(.spring()) {
-                                showBreathingGuide.toggle()
+                                trails = []
+                                currentTrail = []
                             }
+                            hapticGenerator.impactOccurred(intensity: 0.5)
                         }) {
-                            Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                .font(.system(size: 20))
+                            Image(systemName: "arrow.counterclockwise")
+                                .font(.system(size: 18, weight: .medium))
                                 .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
                                 .padding(12)
                                 .background(.ultraThinMaterial)
                                 .clipShape(Circle())
                                 .shadow(color: .black.opacity(0.05), radius: 5)
                         }
+                        
+                        Button(action: {
+                            withAnimation(.spring()) {
+                                isFadeMode.toggle()
+                            }
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: isFadeMode ? "sparkles" : "infinity")
+                                Text(isFadeMode ? "Fade" : "Static")
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 16)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(20)
+                            .shadow(color: .black.opacity(0.05), radius: 5)
+                        }
+                    }
+                    
+                    // Right: Title & Wind
+                    HStack {
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 10) {
+                            Text("Sand Sweep")
+                                .font(.system(size: 24, weight: .thin, design: .serif))
+                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
+                            
+                            Button(action: {
+                                withAnimation(.spring()) {
+                                    showBreathingGuide.toggle()
+                                }
+                            }) {
+                                Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                                    .padding(12)
+                                    .background(.ultraThinMaterial)
+                                    .clipShape(Circle())
+                                    .shadow(color: .black.opacity(0.05), radius: 5)
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal, 25)
-                .padding(.top, 130) // User's preferred padding
+                .padding(.top, 20)
                 
                 Spacer()
             }

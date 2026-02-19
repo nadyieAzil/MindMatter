@@ -40,7 +40,7 @@ struct GameSelectionView: View {
                                 title: "Water Ripple",
                                 description: "Symbolizes calm. No competition, no pressure. Just flow with the ripples.",
                                 icon: "drop.circle.fill",
-                                color: Color(red: 0.4, green: 0.6, blue: 0.9)
+                                color: Color(red: 0.2, green: 0.45, blue: 0.75) // Darker blue
                             )
                         }
                         .buttonStyle(GameCardButtonStyle())
@@ -50,7 +50,7 @@ struct GameSelectionView: View {
                                     title: "Paper Roll",
                                     description: "A tactile journey of parchment and ink. Pull to reveal the path forward.",
                                     icon: "scroll.fill",
-                                    color: Color(red: 0.7, green: 0.5, blue: 0.3)
+                                    color: Color(red: 0.5, green: 0.35, blue: 0.2) // Darker brown
                                 )
                             }
                             .buttonStyle(GameCardButtonStyle())
@@ -60,7 +60,7 @@ struct GameSelectionView: View {
                                     title: "Sand Sweep",
                                     description: "Clearing mess is clearing the mind. A symbolic gesture of peace and renewal.",
                                     icon: "leaf.fill",
-                                    color: Color(red: 0.6, green: 0.7, blue: 0.4)
+                                    color: Color(red: 0.35, green: 0.45, blue: 0.2) // Darker green
                                 )
                             }
                             .buttonStyle(GameCardButtonStyle())
@@ -114,11 +114,11 @@ struct GameCard: View {
             // Icon Circle
             ZStack {
                 Circle()
-                    .fill(color.opacity(0.12))
+                    .fill(color.opacity(0.18)) // Slightly deeper background
                     .frame(width: 90, height: 90)
                     .overlay(
                         Circle()
-                            .stroke(color.opacity(0.2), lineWidth: 1)
+                            .stroke(color.opacity(0.25), lineWidth: 1)
                     )
                 
                 Image(systemName: icon)
@@ -131,11 +131,11 @@ struct GameCard: View {
             VStack(spacing: 10) {
                 Text(title)
                     .font(.system(size: 24, weight: .light, design: .serif))
-                    .foregroundColor(Color(red: 0.1, green: 0.2, blue: 0.4))
+                    .foregroundColor(Color(red: 0.05, green: 0.15, blue: 0.35)) // Much darker
                 
                 Text(description)
                     .font(.system(size: 14, weight: .light))
-                    .foregroundColor(Color(red: 0.2, green: 0.3, blue: 0.5))
+                    .foregroundColor(Color(red: 0.1, green: 0.2, blue: 0.4)) // Deeper blue-grey
                     .multilineTextAlignment(.center)
                     .lineSpacing(2)
                     .frame(height: 60)
@@ -154,7 +154,7 @@ struct GameCard: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 7)
-            .background(color.opacity(0.08).cornerRadius(15))
+            .background(color.opacity(0.12).cornerRadius(15)) // Darker tag background
             
             Spacer(minLength: 25)
         }
@@ -162,13 +162,17 @@ struct GameCard: View {
         .frame(width: 260, height: 380) 
         .background(
             RoundedRectangle(cornerRadius: 32)
-                .fill(.ultraThinMaterial)
+                .fill(.regularMaterial) // Thicker material for visibility
                 .overlay(
                     RoundedRectangle(cornerRadius: 32)
-                        .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                        .fill(Color.white.opacity(0.4)) // White tint to lift it off the background
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 32)
+                        .stroke(Color.white.opacity(0.6), lineWidth: 1.2)
                 )
         )
-        .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 6)
+        .shadow(color: Color.black.opacity(0.12), radius: 15, x: 0, y: 8) // Stronger shadow
     }
 }
 

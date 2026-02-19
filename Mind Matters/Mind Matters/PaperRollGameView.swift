@@ -11,7 +11,7 @@ struct PaperRollGameView: View {
     @State private var lastDragLocation: CGFloat = 0
     
     // Constants
-    private let totalPaperLength: CGFloat = 16000
+    private let totalPaperLength: CGFloat = 32000
     private let friction: CGFloat = 0.97
     private let stopThreshold: CGFloat = 0.5
     
@@ -19,6 +19,9 @@ struct PaperRollGameView: View {
     @State private var breathingScale: CGFloat = 1.0
     @State private var breathingText: String = "In"
     @State private var showBreathingGuide = true
+    
+    // ID for cinematic transitions
+    @State private var paperID = UUID()
     
     var body: some View {
         // MASTER ROOT ZSTACK - For guaranteed layering
@@ -37,6 +40,11 @@ struct PaperRollGameView: View {
                     
                     // Paper Sheet
                     PaperSheetView(height: totalPaperLength, totalWidth: viewportWidth)
+                        .id(paperID)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .trailing),
+                            removal: .move(edge: .leading)
+                        ))
                         .offset(y: -totalPaperLength + activeBottom)
                         .gesture(
                             DragGesture(minimumDistance: 0)
@@ -71,11 +79,13 @@ struct PaperRollGameView: View {
                     // Instructional Text (Moves with bottom of paper)
                     if activeBottom < viewportHeight + 100 {
                         Text("pull me down")
+                            .id("prompt-\(paperID.uuidString)")
                             .font(.system(size: 24, weight: .light, design: .serif))
                             .foregroundColor(Color.black.opacity(0.6))
                             .offset(y: activeBottom - 70)
                             .allowsHitTesting(false)
                             .opacity(Double(max(0, 1.0 - (activeBottom - startBottom) / 300)))
+                            .transition(.opacity)
                     }
                 }
                 .onAppear {
@@ -151,9 +161,10 @@ struct PaperRollGameView: View {
                     
                     // Center: Refill
                     Button(action: {
-                        withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
-                             currentBottom = 0 
-                             velocity = 0
+                        withAnimation(.easeInOut(duration: 0.8)) {
+                            velocity = 0
+                            currentBottom = 0
+                            paperID = UUID() // Slide out left, slide in right
                         }
                     }) {
                         HStack(spacing: 6) {

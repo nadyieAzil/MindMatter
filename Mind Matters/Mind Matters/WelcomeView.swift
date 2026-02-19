@@ -9,11 +9,6 @@ struct WelcomeView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .ignoresSafeArea()
-                
-                // Soft overlay to ensure readability
-                Color.white.opacity(0.15)
-                    .background(.ultraThinMaterial.opacity(0.3))
-                    .ignoresSafeArea()
 
                 VStack(spacing: 30) {
                     Spacer()

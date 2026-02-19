@@ -12,10 +12,6 @@ struct GameSelectionView: View {
                 .ignoresSafeArea()
                 .blur(radius: 12)
             
-            Color.white.opacity(0.15)
-                .background(.ultraThinMaterial)
-                .ignoresSafeArea()
-            
             VStack(spacing: 0) {
                 // Top Spacer to push everything down
                 Spacer()

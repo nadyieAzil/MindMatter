@@ -13,10 +13,6 @@ struct LetItOutView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .ignoresSafeArea()
-            
-            Color.white.opacity(0.12)
-                .background(.ultraThinMaterial.opacity(0.35))
-                .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // Header Space (Reserved for back button)

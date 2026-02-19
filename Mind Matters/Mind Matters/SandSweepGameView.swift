@@ -94,12 +94,14 @@ struct SandSweepGameView: View {
                         let newPoint = SandPoint(location: value.location)
                         currentTrail.append(newPoint)
                         
-                        // Gritty haptic feel
-                        if currentTrail.count % 5 == 0 {
+                        // Gritty haptic feel & sound
+                        if currentTrail.count % 10 == 0 {
                             hapticGenerator.impactOccurred(intensity: 0.3)
+                            SoundManager.instance.playSound(.sandBrush, volume: 0.1)
                         }
                     }
                     .onEnded { _ in
+                        SoundManager.instance.playSound(.sandBrush, volume: 0.2)
                         trails.append(currentTrail)
                         currentTrail = []
                         

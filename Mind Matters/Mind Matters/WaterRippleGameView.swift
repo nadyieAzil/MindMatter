@@ -175,6 +175,7 @@ struct WaterRippleGameView: View {
         // Limit frequency of ripples for performance/feel
         if let last = ripples.last, last.age < 0.1 { return }
         
+        SoundManager.instance.playSound(.waterPop, volume: 0.3)
         ripples.append(Ripple(x: point.x, y: point.y))
         hapticGenerator.impactOccurred(intensity: 0.4)
         

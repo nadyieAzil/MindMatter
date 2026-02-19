@@ -13,18 +13,42 @@ class SoundManager {
     private var players: [SoundType: AVAudioPlayer] = [:]
     
     private init() {
-        // Pre-load sounds if files exist
+        configureAudioSession()
+        preloadSounds()
+    }
+    
+    private func configureAudioSession() {
+        do {
+            // .playback ensures sound plays even if physical mute switch is ON
+            // .mixWithOthers allows other music (like Spotify) to keep playing
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+            print("🔊 Audio Session configured successfully")
+        } catch {
+            print("❌ Failed to set up AVAudioSession: \(error)")
+        }
+    }
+    
+    private func preloadSounds() {
+        print("🔍 Checking for sound assets in Bundle.main...")
         for type in [SoundType.buttonClick, .waterPop, .sandBrush, .paperUnroll] {
-            if let path = Bundle.main.path(forResource: type.rawValue, ofType: "mp3") {
-                let url = URL(fileURLWithPath: path)
-                do {
-                    let player = try AVAudioPlayer(contentsOf: url)
-                    player.prepareToPlay()
-                    players[type] = player
-                } catch {
-                    print("Error loading sound \(type.rawValue): \(error)")
-                }
+            loadSound(type)
+        }
+    }
+    
+    private func loadSound(_ type: SoundType) {
+        if let path = Bundle.main.path(forResource: type.rawValue, ofType: "mp3") {
+            let url = URL(fileURLWithPath: path)
+            do {
+                let player = try AVAudioPlayer(contentsOf: url)
+                player.prepareToPlay()
+                players[type] = player
+                print("✅ Successfully loaded: \(type.rawValue).mp3")
+            } catch {
+                print("❌ Error initializing player for \(type.rawValue): \(error)")
             }
+        } else {
+            print("⚠️ Sound file NOT found in bundle: \(type.rawValue).mp3")
         }
     }
     

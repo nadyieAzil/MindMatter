@@ -49,10 +49,10 @@ struct GameSelectionView: View {
                         }
                         .buttonStyle(GameCardButtonStyle())
                             
-                            NavigationLink(destination: InfiniteRollGameView()) {
+                            NavigationLink(destination: PaperRollGameView()) {
                                 GameCard(
-                                    title: "Infinite Roll",
-                                    description: "A seamless loop of silk and ancient paper. A rhythmic journey for the mind.",
+                                    title: "Paper Roll",
+                                    description: "A tactile journey of parchment and ink. Pull to reveal the path forward.",
                                     icon: "scroll.fill",
                                     color: Color(red: 0.7, green: 0.5, blue: 0.3)
                                 )

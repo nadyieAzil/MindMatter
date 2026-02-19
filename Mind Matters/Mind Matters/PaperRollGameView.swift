@@ -153,49 +153,48 @@ struct PaperRollGameView: View {
                 }
             }
             // --- TOP-MOST OVERLAYS (Guaranteed Visibility) ---
+            // --- DIAGNOSTIC CENTER OVERLAY ---
             .overlay(
-                // 5. Breathing Guide (Centered)
-                ZStack {
-                    if showBreathingGuide {
-                        ZStack {
-                            Circle()
-                                .stroke(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.35), lineWidth: 1.5)
-                                .frame(width: 240, height: 240)
-                            
-                            Circle()
-                                .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.25))
-                                .frame(width: 200 * breathingScale, height: 200 * breathingScale)
-                                .blur(radius: 15)
-                            
-                            Text(breathingText)
-                                .font(.system(size: 28, weight: .medium, design: .serif))
-                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
+                VStack(spacing: 60) {
+                    // 5. Breathing Guide (Centered for Test)
+                    ZStack {
+                        if showBreathingGuide {
+                            ZStack {
+                                Circle()
+                                    .stroke(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5), lineWidth: 3)
+                                    .frame(width: 200, height: 200)
+                                
+                                Circle()
+                                    .fill(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.3))
+                                    .frame(width: 160 * breathingScale, height: 160 * breathingScale)
+                                
+                                Text(breathingText)
+                                    .font(.system(size: 32, weight: .bold, design: .serif))
+                                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1))
+                            }
                         }
-                        .transition(.opacity)
                     }
-                }
-                .allowsHitTesting(false)
-                .zIndex(100)
-            )
-            .overlay(
-                // 6. Blue Progress Bar (Bottom Center)
-                VStack {
-                    Spacer()
+                    
+                    // 6. Progress Bar (Centered for Test)
                     ZStack(alignment: .leading) {
                         Capsule()
-                            .fill(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.1))
-                            .frame(width: 300, height: 12)
+                            .fill(Color.black.opacity(0.1))
+                            .frame(width: 350, height: 20)
                         
                         let progress = min(1.0, max(0.0, (activeBottom - startBottom) / (totalPaperLength - startBottom)))
                         Capsule()
-                            .fill(Color(red: 0.0, green: 0.5, blue: 1.0)) // Bright Zen Blue
-                            .frame(width: 300 * progress, height: 12)
-                            .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 2)
+                            .fill(Color.blue)
+                            .frame(width: 350 * progress, height: 20)
+                            .shadow(radius: 10)
                     }
-                    .padding(.bottom, geometry.safeAreaInsets.bottom + 40)
+                    
+                    Text("CENTER TEST")
+                        .font(.caption)
+                        .foregroundColor(.red)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .allowsHitTesting(false)
-                .zIndex(101)
+                .zIndex(999)
             )
             .navigationBarHidden(true)
             .onAppear {

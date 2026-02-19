@@ -88,17 +88,17 @@ struct PaperRollGameView: View {
                 if showBreathingGuide {
                     ZStack {
                         Circle()
-                            .stroke(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.1), lineWidth: 1)
+                            .stroke(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.15), lineWidth: 1)
                             .frame(width: 240, height: 240)
                         
                         Circle()
-                            .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.05))
+                            .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.12))
                             .frame(width: 200 * breathingScale, height: 200 * breathingScale)
-                            .blur(radius: 10)
+                            .blur(radius: 12)
                         
                         Text(breathingText)
-                            .font(.system(size: 24, weight: .ultraLight, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
+                            .font(.system(size: 26, weight: .light, design: .serif))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .allowsHitTesting(false)
@@ -116,10 +116,11 @@ struct PaperRollGameView: View {
                         Capsule()
                             .fill(Color(red: 0.0, green: 0.48, blue: 1.0)) // Vibrant Blue
                             .frame(width: 280 * progress, height: 10)
-                            .shadow(color: Color.blue.opacity(0.15), radius: 4)
+                            .shadow(color: Color.blue.opacity(0.2), radius: 6, x: 0, y: 2)
                     }
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 60)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .allowsHitTesting(false)
                 
                 // 6. Header

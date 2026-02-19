@@ -49,7 +49,7 @@ struct GameSelectionView: View {
                         }
                         .buttonStyle(GameCardButtonStyle())
                             
-                            Button(action: { print("Infinite Roll selected") }) {
+                            NavigationLink(destination: InfiniteRollGameView()) {
                                 GameCard(
                                     title: "Infinite Roll",
                                     description: "A seamless loop of silk and ancient paper. A rhythmic journey for the mind.",

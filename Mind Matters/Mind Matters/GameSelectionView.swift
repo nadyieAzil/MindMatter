@@ -39,12 +39,15 @@ struct GameSelectionView: View {
                 GeometryReader { geometry in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 35) {
+                            NavigationLink(destination: WaterRippleGameView()) {
                             GameCard(
                                 title: "Water Ripple",
                                 description: "Symbolizes calm. No competition, no pressure. Just flow with the ripples.",
                                 icon: "drop.circle.fill",
                                 color: Color(red: 0.4, green: 0.6, blue: 0.9)
                             )
+                        }
+                        .buttonStyle(PlainButtonStyle())
                             
                             GameCard(
                                 title: "Infinite Roll",

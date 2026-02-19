@@ -80,7 +80,7 @@ struct PaperRollGameView: View {
                             .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.3))
                     }
                     .allowsHitTesting(false)
-                    .opacity(max(0, 1.0 + (offset / 100)))
+                    .opacity(Double(max(0, 1.0 + (offset / 100))))
                 }
                 
                 // Progress Bar (Life of the Roll)

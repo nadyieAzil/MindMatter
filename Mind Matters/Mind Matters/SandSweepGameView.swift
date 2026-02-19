@@ -1,65 +1,98 @@
 import SwiftUI
 
-struct InfiniteRollGameView: View {
+struct SandPoint: Identifiable {
+    let id = UUID()
+    let location: CGPoint
+    var age: Double = 0
+}
+
+struct SandSweepGameView: View {
     @Environment(\.dismiss) var dismiss
     
-    // Scroll state
-    @State private var offset: CGFloat = 0
-    @State private var lastOffset: CGFloat = 0
-    @State private var hapticGenerator = UISelectionFeedbackGenerator()
+    // Sand state
+    @State private var trails: [[SandPoint]] = []
+    @State private var currentTrail: [SandPoint] = []
+    @State private var hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     
-    // Breathing state (consistent with Water Ripple)
+    // Breathing state
     @State private var breathingScale: CGFloat = 1.0
     @State private var breathingText: String = "In"
     @State private var showBreathingGuide = true
     
-    private let textureHeight: CGFloat = 1000
+    private let sandColor = Color(red: 0.92, green: 0.88, blue: 0.82)
+    private let rakeColor = Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.12)
     
     var body: some View {
         ZStack {
-            // Background - Warm parchment color
-            Color(red: 0.94, green: 0.91, blue: 0.85)
-                .ignoresSafeArea()
+            // Sand Background
+            sandColor.ignoresSafeArea()
             
-            // Texture Layers for Infinite Scrolling
-            ZStack(alignment: .top) {
-                PaperTextureView()
-                    .offset(y: (offset.truncatingRemainder(dividingBy: textureHeight)) - textureHeight)
-                
-                PaperTextureView()
-                    .offset(y: offset.truncatingRemainder(dividingBy: textureHeight))
-                
-                PaperTextureView()
-                    .offset(y: (offset.truncatingRemainder(dividingBy: textureHeight)) + textureHeight)
-            }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        let delta = value.translation.height - lastOffset
-                        offset += delta
-                        lastOffset = value.translation.height
-                        
-                        // Haptic feedback every few pixels of scroll
-                        if abs(offset.truncatingRemainder(dividingBy: 20)) < abs(delta) {
-                            hapticGenerator.selectionChanged()
-                        }
-                    }
-                    .onEnded { _ in
-                        lastOffset = 0
-                        hapticGenerator.prepare()
-                    }
-            )
-            
-            // Side "Roller" Shadows for depth
-            HStack {
-                LinearGradient(gradient: Gradient(colors: [.black.opacity(0.1), .clear]), startPoint: .leading, endPoint: .trailing)
-                    .frame(width: 40)
-                Spacer()
-                LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.1)]), startPoint: .leading, endPoint: .trailing)
-                    .frame(width: 40)
+            // Texture - Subtle Grain
+            Canvas { context, size in
+                for _ in 0..<500 {
+                    let rect = CGRect(
+                        x: CGFloat.random(in: 0...size.width),
+                        y: CGFloat.random(in: 0...size.height),
+                        width: 1.5,
+                        height: 1.5
+                    )
+                    context.fill(Path(ellipseIn: rect), with: .color(.black.opacity(0.03)))
+                }
             }
             .ignoresSafeArea()
             .allowsHitTesting(false)
+            
+            // Drawing Canvas
+            Canvas { context, size in
+                for trail in (trails + [currentTrail]) {
+                    if trail.count > 1 {
+                        var path = Path()
+                        path.move(to: trail[0].location)
+                        for i in 1..<trail.count {
+                            path.addLine(to: trail[i].location)
+                        }
+                        
+                        // Main Rake Trail
+                        context.stroke(
+                            path,
+                            with: .color(rakeColor),
+                            style: StrokeStyle(lineWidth: 25, lineCap: .round, lineJoin: .round)
+                        )
+                        
+                        // Inner "Groove" Lines
+                        context.stroke(
+                            path,
+                            with: .color(rakeColor.opacity(0.3)),
+                            style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [2, 10])
+                        )
+                    }
+                }
+            }
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        if currentTrail.isEmpty {
+                            hapticGenerator.prepare()
+                        }
+                        
+                        let newPoint = SandPoint(location: value.location)
+                        currentTrail.append(newPoint)
+                        
+                        // Gritty haptic feel
+                        if currentTrail.count % 5 == 0 {
+                            hapticGenerator.impactOccurred(intensity: 0.3)
+                        }
+                    }
+                    .onEnded { _ in
+                        trails.append(currentTrail)
+                        currentTrail = []
+                        
+                        // Cleanup to keep performance smooth
+                        if trails.count > 15 {
+                            trails.removeFirst()
+                        }
+                    }
+            )
             
             // Breathing Guide Overlay
             if showBreathingGuide {
@@ -86,6 +119,7 @@ struct InfiniteRollGameView: View {
                 }
                 .allowsHitTesting(false)
             }
+            
             // Header & Controls
             VStack {
                 HStack(alignment: .top) {
@@ -106,7 +140,7 @@ struct InfiniteRollGameView: View {
                     Spacer()
                     
                     VStack(alignment: .trailing, spacing: 10) {
-                        Text("Infinite Roll")
+                        Text("Sand Sweep")
                             .font(.system(size: 24, weight: .thin, design: .serif))
                             .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
                         
@@ -126,7 +160,7 @@ struct InfiniteRollGameView: View {
                     }
                 }
                 .padding(.horizontal, 25)
-                .padding(.top, 130)
+                .padding(.top, 130) // User's preferred padding
                 
                 Spacer()
             }
@@ -166,72 +200,6 @@ struct InfiniteRollGameView: View {
     }
 }
 
-struct PaperTextureView: View {
-    var body: some View {
-        ZStack {
-            // Main texture color (Warm, aged parchment)
-            Color(red: 0.94, green: 0.92, blue: 0.86)
-            
-            // Subtle paper grain/noise (Using a gradient-based approach for performance)
-            Canvas { context, size in
-                // Draw many tiny organic fibers
-                for i in 0..<120 {
-                    let startX = CGFloat.random(in: 0...size.width)
-                    let startY = CGFloat.random(in: 0...size.height)
-                    let length = CGFloat.random(in: 10...60)
-                    let angle = Angle.degrees(Double.random(in: -10...10))
-                    
-                    var path = Path()
-                    path.move(to: CGPoint(x: startX, y: startY))
-                    path.addLine(to: CGPoint(
-                        x: startX + length * CGFloat(cos(angle.radians)),
-                        y: startY + length * CGFloat(sin(angle.radians))
-                    ))
-                    
-                    context.stroke(
-                        path,
-                        with: .color(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.04)),
-                        lineWidth: 0.5
-                    )
-                }
-            }
-            
-            // Traditional Grid (Horizontal Lines like a manuscript)
-            VStack(spacing: 60) {
-                ForEach(0..<18) { _ in
-                    Rectangle()
-                        .fill(Color(red: 0.4, green: 0.3, blue: 0.2).opacity(0.06))
-                        .frame(height: 1.2)
-                }
-            }
-            
-            // Side "Roller" Depth Highlights
-            HStack {
-                // Left Shadow
-                Rectangle()
-                    .fill(LinearGradient(
-                        gradient: Gradient(colors: [.black.opacity(0.08), .black.opacity(0.02), .clear]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    ))
-                    .frame(width: 60)
-                
-                Spacer()
-                
-                // Right Shadow
-                Rectangle()
-                    .fill(LinearGradient(
-                        gradient: Gradient(colors: [.clear, .black.opacity(0.02), .black.opacity(0.08)]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    ))
-                    .frame(width: 60)
-            }
-        }
-        .frame(height: 1000)
-    }
-}
-
 #Preview {
-    InfiniteRollGameView()
+    SandSweepGameView()
 }

@@ -59,7 +59,7 @@ struct GameSelectionView: View {
                             }
                             .buttonStyle(GameCardButtonStyle())
                             
-                            Button(action: { print("Sand Sweep selected") }) {
+                            NavigationLink(destination: SandSweepGameView()) {
                                 GameCard(
                                     title: "Sand Sweep",
                                     description: "Clearing mess is clearing the mind. A symbolic gesture of peace and renewal.",

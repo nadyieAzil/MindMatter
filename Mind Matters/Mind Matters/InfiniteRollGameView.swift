@@ -126,7 +126,7 @@ struct InfiniteRollGameView: View {
                     }
                 }
                 .padding(.horizontal, 25)
-                .padding(.top, 20)
+                .padding(.top, 60)
                 
                 Spacer()
             }

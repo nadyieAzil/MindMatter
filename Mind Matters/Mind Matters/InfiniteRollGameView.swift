@@ -87,50 +87,49 @@ struct InfiniteRollGameView: View {
                 .allowsHitTesting(false)
             }
             
-            // Header & Controls
-            VStack {
-                HStack(alignment: .top) {
-                    Button(action: { dismiss() }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chevron.left")
-                            Text("Exit")
-                        }
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 18)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(25)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 15) {
-                        Text("Infinite Roll")
-                            .font(.system(size: 24, weight: .thin, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
-                        
-                        Button(action: {
-                            withAnimation(.spring()) {
-                                showBreathingGuide.toggle()
-                            }
-                        }) {
-                            Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                .font(.system(size: 20))
-                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                                .padding(12)
-                                .background(.ultraThinMaterial)
-                                .clipShape(Circle())
-                        }
-                    }
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 20)
-                
-                Spacer()
-            }
         }
         .navigationBarHidden(true)
+        .safeAreaInset(edge: .top) {
+            HStack(alignment: .top) {
+                Button(action: { dismiss() }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "chevron.left")
+                        Text("Exit")
+                    }
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(25)
+                    .shadow(color: .black.opacity(0.05), radius: 8)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 10) {
+                    Text("Infinite Roll")
+                        .font(.system(size: 24, weight: .thin, design: .serif))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
+                    
+                    Button(action: {
+                        withAnimation(.spring()) {
+                            showBreathingGuide.toggle()
+                        }
+                    }) {
+                        Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
+                            .font(.system(size: 20))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                            .padding(12)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.05), radius: 5)
+                    }
+                }
+            }
+            .padding(.horizontal, 25)
+            .padding(.top, 10)
+        }
         .onAppear {
             hapticGenerator.prepare()
             startBreathingCycle()

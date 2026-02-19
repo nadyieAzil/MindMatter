@@ -183,8 +183,8 @@ struct PaperTextureView: View {
                     var path = Path()
                     path.move(to: CGPoint(x: startX, y: startY))
                     path.addLine(to: CGPoint(
-                        x: startX + length * cos(angle.radians),
-                        y: startY + length * sin(angle.radians)
+                        x: startX + length * CGFloat(cos(angle.radians)),
+                        y: startY + length * CGFloat(sin(angle.radians))
                     ))
                     
                     context.stroke(

@@ -43,6 +43,7 @@ struct GameSelectionView: View {
                                 color: Color(red: 0.2, green: 0.45, blue: 0.75) // Darker blue
                             )
                         }
+                        .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
                         .buttonStyle(GameCardButtonStyle())
                             
                             NavigationLink(destination: PaperRollGameView()) {
@@ -53,6 +54,7 @@ struct GameSelectionView: View {
                                     color: Color(red: 0.5, green: 0.35, blue: 0.2) // Darker brown
                                 )
                             }
+                            .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
                             .buttonStyle(GameCardButtonStyle())
                             
                             NavigationLink(destination: SandSweepGameView()) {
@@ -63,6 +65,7 @@ struct GameSelectionView: View {
                                     color: Color(red: 0.35, green: 0.45, blue: 0.2) // Darker green
                                 )
                             }
+                            .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
                             .buttonStyle(GameCardButtonStyle())
                         }
                         .padding(.horizontal, 40)
@@ -80,7 +83,10 @@ struct GameSelectionView: View {
         .navigationBarHidden(true)
         .safeAreaInset(edge: .top) {
             HStack {
-                Button(action: { dismiss() }) {
+                Button(action: { 
+                    SoundManager.instance.playSound(.buttonClick)
+                    dismiss() 
+                }) {
                     HStack(spacing: 8) {
                         Image(systemName: "chevron.left")
                         Text("Back to Main Page")

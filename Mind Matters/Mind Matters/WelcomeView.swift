@@ -38,6 +38,7 @@ struct WelcomeView: View {
                                 icon: "gamecontroller"
                             )
                         }
+                        .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
                         .buttonStyle(PlainButtonStyle())
                         
                         NavigationLink(destination: LetItOutView()) {
@@ -46,12 +47,14 @@ struct WelcomeView: View {
                                 icon: "heart.text.square"
                             )
                         }
+                        .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
                         .buttonStyle(PlainButtonStyle())
                         
                         WelcomeButton(
                             title: "Tips",
                             icon: "lightbulb",
-                            color: Color(red: 0.55, green: 0.75, blue: 0.95)
+                            color: Color(red: 0.55, green: 0.75, blue: 0.95),
+                            action: { SoundManager.instance.playSound(.buttonClick) }
                         )
                     }
                     .padding(.horizontal, 20)
@@ -95,9 +98,11 @@ struct WelcomeButton: View {
     let title: String
     let icon: String
     let color: Color
+    let action: () -> Void
     
     var body: some View {
         Button(action: {
+            action()
             print("\(title) tapped")
         }) {
             WelcomeButtonContent(title: title, icon: icon)

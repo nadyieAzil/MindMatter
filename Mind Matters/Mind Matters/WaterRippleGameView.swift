@@ -121,18 +121,21 @@ struct WaterRippleGameView: View {
             // Header & Controls
             VStack {
                 HStack(alignment: .top) {
-                    Button(action: { dismiss() }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chevron.left")
-                            Text("Exit")
-                        }
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 18)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(25)
+                    Button(action: { 
+                    SoundManager.instance.playSound(.buttonClick)
+                    dismiss() 
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "chevron.left")
+                        Text("Exit")
                     }
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.6))
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 15)
+                    .background(.ultraThinMaterial.opacity(0.5))
+                    .cornerRadius(20)
+                }
                     
                     Spacer()
                     

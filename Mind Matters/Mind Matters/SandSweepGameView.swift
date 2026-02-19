@@ -141,17 +141,20 @@ struct SandSweepGameView: View {
                 ZStack(alignment: .top) {
                     // Left: Exit
                     HStack {
-                        Button(action: { dismiss() }) {
+                        Button(action: { 
+                            SoundManager.instance.playSound(.buttonClick)
+                            dismiss() 
+                        }) {
                             HStack(spacing: 8) {
                                 Image(systemName: "chevron.left")
                                 Text("Exit")
                             }
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.8))
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 18)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(25)
+                            .foregroundColor(Color(red: 0.3, green: 0.4, blue: 0.2).opacity(0.6))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 15)
+                            .background(.ultraThinMaterial.opacity(0.5))
+                            .cornerRadius(20)
                             .shadow(color: .black.opacity(0.05), radius: 8)
                         }
                         Spacer()
@@ -160,6 +163,7 @@ struct SandSweepGameView: View {
                     // Center: Reset & Mode
                     HStack(spacing: 15) {
                         Button(action: {
+                            SoundManager.instance.playSound(.buttonClick)
                             withAnimation(.spring()) {
                                 trails = []
                                 currentTrail = []
@@ -176,6 +180,7 @@ struct SandSweepGameView: View {
                         }
                         
                         Button(action: {
+                            SoundManager.instance.playSound(.buttonClick)
                             withAnimation(.spring()) {
                                 isFadeMode.toggle()
                             }

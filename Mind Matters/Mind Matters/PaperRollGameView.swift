@@ -56,6 +56,11 @@ struct PaperRollGameView: View {
                                     let delta = value.location.y - lastDragLocation
                                     lastDragLocation = value.location.y
                                     
+                                    // Subtle paper sound while pulling
+                                    if abs(delta) > 1 {
+                                        SoundManager.instance.playSound(.paperUnroll, volume: 0.1)
+                                    }
+                                    
                                     let nextBottom = (currentBottom == 0 ? startBottom : currentBottom) + delta
                                     if nextBottom < startBottom {
                                         currentBottom = startBottom + (nextBottom - startBottom) * 0.3
@@ -144,7 +149,10 @@ struct PaperRollGameView: View {
             VStack {
                 HStack(alignment: .top) {
                     // Left: Exit
-                    Button(action: { dismiss() }) {
+                    Button(action: { 
+                        SoundManager.instance.playSound(.buttonClick)
+                        dismiss() 
+                    }) {
                         HStack(spacing: 8) {
                             Image(systemName: "chevron.left")
                             Text("Exit")
@@ -161,6 +169,7 @@ struct PaperRollGameView: View {
                     
                     // Center: Refill
                     Button(action: {
+                        SoundManager.instance.playSound(.buttonClick)
                         withAnimation(.easeInOut(duration: 0.8)) {
                             velocity = 0
                             currentBottom = 0
@@ -188,6 +197,7 @@ struct PaperRollGameView: View {
                             .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.4))
                         
                         Button(action: {
+                            SoundManager.instance.playSound(.buttonClick)
                             withAnimation(.spring()) {
                                 showBreathingGuide.toggle()
                             }
@@ -233,6 +243,11 @@ struct PaperRollGameView: View {
                 velocity = 0
             }
             if abs(velocity) > stopThreshold {
+                // Subtle sound during inertia
+                if Int.random(in: 0...10) == 0 {
+                    SoundManager.instance.playSound(.paperUnroll, volume: 0.05)
+                }
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) {
                     step()
                 }

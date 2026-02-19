@@ -31,6 +31,7 @@ struct LetItOutView: View {
                         .transition(.opacity)
 
                     Button(action: {
+                        SoundManager.instance.playSound(.buttonClick)
                         withAnimation(.spring()) {
                             currentQuestion = ReflectionQuestions.all.randomElement() ?? ""
                         }
@@ -76,7 +77,10 @@ struct LetItOutView: View {
 
                 // Release Button
                 VStack(spacing: 20) {
-                    Button(action: releaseConfession) {
+                    Button(action: {
+                        SoundManager.instance.playSound(.buttonClick)
+                        releaseConfession()
+                    }) {
                         Text("Release Thoughts")
                             .font(.title3)
                             .fontWeight(.light)
@@ -112,7 +116,10 @@ struct LetItOutView: View {
         .navigationBarHidden(true)
         .safeAreaInset(edge: .top) {
             HStack {
-                Button(action: { dismiss() }) {
+                Button(action: { 
+                    SoundManager.instance.playSound(.buttonClick)
+                    dismiss() 
+                }) {
                     HStack(spacing: 8) {
                         Image(systemName: "chevron.left")
                         Text("Back to Main Page")

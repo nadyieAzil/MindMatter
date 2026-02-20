@@ -65,6 +65,15 @@ struct WelcomeView: View {
                     }
                     .padding(.horizontal, 20)
                     
+                    // Tagline below the cards
+                    VStack(spacing: 8) {
+                        Text("Pause. Breathe. Reset.")
+                            .font(.system(size: 24, weight: .thin, design: .serif))
+                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.8))
+                            .tracking(2)
+                    }
+                    .padding(.top, 10)
+                    
                     Spacer()
                     Spacer()
                 }

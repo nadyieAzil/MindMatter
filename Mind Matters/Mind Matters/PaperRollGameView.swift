@@ -38,8 +38,9 @@ struct PaperRollGameView: View {
                 let activeBottom = (currentBottom == 0 ? startBottom : currentBottom)
                 
                 ZStack(alignment: .top) {
-                    // Paper Sheet
+                    // Paper Sheet - Explicitly centered horizontally
                     PaperSheetView(height: totalPaperLength, totalWidth: viewportWidth)
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .id(paperID)
                         .transition(.asymmetric(
                             insertion: .move(edge: .trailing),

@@ -9,12 +9,13 @@ struct EmotionSelectionView: View {
     ]
     
     var body: some View {
-        NavigationStack {
-            ZStack {
+        ZStack {
                 // Nature Background Wallpaper
                 Image("WelcomeWallpaper")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                    .clipped()
                     .ignoresSafeArea()
                 
                 // Aesthetic Layer: White + Blue tint overlay
@@ -57,8 +58,6 @@ struct EmotionSelectionView: View {
                     
                     Spacer()
                 }
-            }
-            .navigationBarHidden(true)
             .safeAreaInset(edge: .top) {
                 HStack {
                     Button(action: { 

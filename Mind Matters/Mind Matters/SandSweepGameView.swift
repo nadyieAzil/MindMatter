@@ -26,7 +26,10 @@ struct SandSweepGameView: View {
     var body: some View {
         ZStack {
             // Sand Background
-            sandColor.ignoresSafeArea()
+            sandColor
+                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                .clipped()
+                .ignoresSafeArea()
             
             // Texture - Subtle Grain
             Canvas { context, size in

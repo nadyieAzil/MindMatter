@@ -36,6 +36,8 @@ struct PaperRollGameView: View {
                 ZStack(alignment: .top) {
                     // Desk Background
                     Color(red: 0.90, green: 0.85, blue: 0.78)
+                        .frame(maxWidth: viewportWidth, maxHeight: viewportHeight)
+                        .clipped()
                         .ignoresSafeArea()
                     
                     // Paper Sheet

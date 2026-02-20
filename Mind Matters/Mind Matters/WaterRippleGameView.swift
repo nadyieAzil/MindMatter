@@ -38,6 +38,8 @@ struct WaterRippleGameView: View {
                 Color.cyan.opacity(0.05)
                     .blendMode(.screen)
             }
+            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+            .clipped()
             .ignoresSafeArea()
             
             // Ripple Canvas

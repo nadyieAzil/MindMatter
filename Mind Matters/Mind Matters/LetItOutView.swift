@@ -13,6 +13,8 @@ struct LetItOutView: View {
             Image("WelcomeWallpaper")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
+                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                .clipped()
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {

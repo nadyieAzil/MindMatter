@@ -62,7 +62,7 @@ struct LetItOutView: View {
                             .font(.system(size: 20, weight: .regular, design: .serif))
                             .lineSpacing(8)
                             .scrollContentBackground(.hidden)
-                            .padding(EdgeInsets(top: 40, leading: 100, bottom: 40, trailing: 40))
+                            .padding(EdgeInsets(top: 40, leading: 90, bottom: 40, trailing: 40))
                             .background(
                                 PaperView()
                                     .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 15)
@@ -74,8 +74,7 @@ struct LetItOutView: View {
                     }
                 }
                 .padding(.horizontal, 30)
-                .frame(maxWidth: 800)
-                // Use a flexible frame that adapts to screen height but leaves room for other elements
+                .frame(maxWidth: 800, maxHeight: 600) // Constrained height to keep UI balanced
                 .layoutPriority(1) 
 
                 Spacer()

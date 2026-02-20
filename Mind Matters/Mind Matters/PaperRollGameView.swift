@@ -34,10 +34,8 @@ struct PaperRollGameView: View {
                 let activeBottom = (currentBottom == 0 ? startBottom : currentBottom)
                 
                 ZStack(alignment: .top) {
-                    // Desk Background
+                    // Desk Background - MUST ignore safe area and be sized correctly
                     Color(red: 0.90, green: 0.85, blue: 0.78)
-                        .frame(width: viewportWidth, height: viewportHeight)
-                        .clipped()
                         .ignoresSafeArea()
                     
                     // Paper Sheet
@@ -125,12 +123,9 @@ struct PaperRollGameView: View {
                 .zIndex(5)
             }
             
-        }
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
-        .safeAreaInset(edge: .bottom) {
-            // PROGRESS BAR - Now in safeAreaInset to avoid layout artifacts
+            // 3. PROGRESS BAR LAYER - Moved back inside ZStack to float over background
             VStack {
+                Spacer()
                 ZStack(alignment: .leading) {
                     Capsule()
                         .fill(Color.black.opacity(0.06))
@@ -143,11 +138,14 @@ struct PaperRollGameView: View {
                         .frame(width: 300 * progress, height: 10)
                         .shadow(color: Color.blue.opacity(0.2), radius: 6, y: 2)
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 40) // Positioned in the bottom safe area
             }
-            .frame(maxWidth: .infinity)
             .allowsHitTesting(false)
+            .zIndex(6)
+            
         }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
         .safeAreaInset(edge: .top) {
             HStack(alignment: .center) {
                 // Left: Exit

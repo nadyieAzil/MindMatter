@@ -26,6 +26,10 @@ struct PaperRollGameView: View {
     var body: some View {
         // MASTER ROOT ZSTACK - For guaranteed layering
         ZStack {
+            // Desk Background covering EVERYTHING
+            Color(red: 0.90, green: 0.85, blue: 0.78)
+                .ignoresSafeArea()
+            
             // 1. BACKGROUND LAYER (Desk + Scrolling Paper)
             GeometryReader { geometry in
                 let viewportHeight = geometry.size.height
@@ -34,10 +38,6 @@ struct PaperRollGameView: View {
                 let activeBottom = (currentBottom == 0 ? startBottom : currentBottom)
                 
                 ZStack(alignment: .top) {
-                    // Desk Background - MUST ignore safe area and be sized correctly
-                    Color(red: 0.90, green: 0.85, blue: 0.78)
-                        .ignoresSafeArea()
-                    
                     // Paper Sheet
                     PaperSheetView(height: totalPaperLength, totalWidth: viewportWidth)
                         .id(paperID)

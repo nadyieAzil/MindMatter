@@ -74,7 +74,7 @@ struct LetItOutView: View {
                     }
                 }
                 .padding(.horizontal, 30)
-                .frame(maxWidth: 800, maxHeight: 600) // Constrained height to keep UI balanced
+                .frame(maxWidth: 800, maxHeight: 420) // Much more constrained height to prevent covering other UI
                 .layoutPriority(1) 
 
                 Spacer()
@@ -164,29 +164,30 @@ struct PaperView: View {
         ZStack(alignment: .topLeading) {
             Color(red: 0.99, green: 0.99, blue: 0.98)
             
-            // Texture
+            // Guidelines and Sideline
             Canvas { context, size in
-                for _ in 0..<1500 {
+                // Red sideline
+                var sideline = Path()
+                sideline.move(to: CGPoint(x: 80, y: 0))
+                sideline.addLine(to: CGPoint(x: 80, y: size.height))
+                context.stroke(sideline, with: .color(Color.red.opacity(0.25)), lineWidth: 1.5)
+                
+                // Blue horizontal lines
+                let lineSpacing: CGFloat = 36
+                for i in 1...Int(size.height / lineSpacing) {
+                    let y = CGFloat(i) * lineSpacing + 5
+                    var path = Path()
+                    path.move(to: CGPoint(x: 0, y: y))
+                    path.addLine(to: CGPoint(x: size.width, y: y))
+                    context.stroke(path, with: .color(Color.blue.opacity(0.08)), lineWidth: 1)
+                }
+                
+                // Texture grain
+                for _ in 0..<1000 {
                     let rect = CGRect(x: CGFloat.random(in: 0...size.width), y: CGFloat.random(in: 0...size.height), width: 1, height: 1)
                     context.fill(Path(ellipseIn: rect), with: .color(.black.opacity(0.02)))
                 }
             }
-            
-            // Red sideline
-            Rectangle()
-                .fill(Color.red.opacity(0.25))
-                .frame(width: 1.5)
-                .padding(.leading, 80)
-            
-            // Blue horizontal lines
-            VStack(spacing: 36) {
-                ForEach(0..<25, id: \.self) { _ in
-                    Rectangle()
-                        .fill(Color.blue.opacity(0.08))
-                        .frame(height: 1)
-                }
-            }
-            .padding(.top, 40)
         }
         .cornerRadius(10)
     }

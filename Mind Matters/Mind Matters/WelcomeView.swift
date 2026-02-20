@@ -72,7 +72,7 @@ struct WelcomeView: View {
                             .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.8))
                             .tracking(2)
                     }
-                    .padding(.top, 10)
+                    .padding(.top, 90)
                     
                     Spacer()
                     Spacer()

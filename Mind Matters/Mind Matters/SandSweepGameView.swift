@@ -27,7 +27,7 @@ struct SandSweepGameView: View {
         ZStack {
             // Sand Background
             sandColor
-                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipped()
                 .ignoresSafeArea()
             
@@ -145,7 +145,7 @@ struct SandSweepGameView: View {
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .safeAreaInset(edge: .top) {
-            ZStack(alignment: .top) {
+            ZStack(alignment: .center) {
                 // Left: Exit
                 HStack {
                     Button(action: { 
@@ -157,18 +157,18 @@ struct SandSweepGameView: View {
                             Text("Exit")
                         }
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color(red: 0.3, green: 0.4, blue: 0.2).opacity(0.6))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 15)
-                        .background(.ultraThinMaterial.opacity(0.5))
-                        .cornerRadius(20)
-                        .shadow(color: .black.opacity(0.05), radius: 8)
+                        .foregroundColor(Color(red: 0.3, green: 0.4, blue: 0.2))
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 18)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(25)
+                        .shadow(color: .black.opacity(0.08), radius: 8)
                     }
                     Spacer()
                 }
                 
                 // Center: Reset & Mode
-                HStack(spacing: 15) {
+                HStack(spacing: 12) {
                     Button(action: {
                         SoundManager.instance.playSound(.buttonClick)
                         withAnimation(.spring()) {
@@ -178,12 +178,11 @@ struct SandSweepGameView: View {
                         hapticGenerator.impactOccurred(intensity: 0.5)
                     }) {
                         Image(systemName: "arrow.counterclockwise")
-                            .font(.system(size: 18, weight: .medium))
+                            .font(.system(size: 14))
                             .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                            .padding(12)
+                            .padding(10)
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.05), radius: 5)
                     }
                     
                     Button(action: {
@@ -192,26 +191,21 @@ struct SandSweepGameView: View {
                             isFadeMode.toggle()
                         }
                     }) {
-                        HStack(spacing: 6) {
-                            Image(systemName: isFadeMode ? "sparkles" : "infinity")
-                            Text(isFadeMode ? "Fade" : "Static")
-                                .font(.system(size: 14, weight: .semibold))
-                        }
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(20)
-                        .shadow(color: .black.opacity(0.05), radius: 5)
+                        Image(systemName: isFadeMode ? "sparkles" : "infinity")
+                            .font(.system(size: 14))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                            .padding(10)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
                     }
                 }
                 
                 // Right: Title & Wind
                 HStack {
                     Spacer()
-                    VStack(alignment: .trailing, spacing: 10) {
+                    VStack(alignment: .trailing, spacing: 4) {
                         Text("Sand Sweep")
-                            .font(.system(size: 24, weight: .thin, design: .serif))
+                            .font(.system(size: 18, weight: .light, design: .serif))
                             .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
                         
                         Button(action: {
@@ -220,18 +214,17 @@ struct SandSweepGameView: View {
                             }
                         }) {
                             Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                .font(.system(size: 20))
+                                .font(.system(size: 16))
                                 .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                                .padding(12)
+                                .padding(8)
                                 .background(.ultraThinMaterial)
                                 .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.05), radius: 5)
                         }
                     }
                 }
             }
-            .padding(.horizontal, 25)
-            .padding(.top, 10)
+            .padding(.horizontal, 20)
+            .padding(.top, 15)
         }
         .onAppear {
             hapticGenerator.prepare()

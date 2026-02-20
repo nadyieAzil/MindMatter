@@ -151,7 +151,7 @@ struct PaperRollGameView: View {
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .safeAreaInset(edge: .top) {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
                 // Left: Exit
                 Button(action: { 
                     SoundManager.instance.playSound(.buttonClick)
@@ -162,11 +162,12 @@ struct PaperRollGameView: View {
                         Text("Exit")
                     }
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 15)
-                    .background(.ultraThinMaterial.opacity(0.5))
-                    .cornerRadius(20)
+                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(25)
+                    .shadow(color: .black.opacity(0.08), radius: 8)
                 }
                 
                 Spacer()
@@ -180,25 +181,21 @@ struct PaperRollGameView: View {
                         paperID = UUID() // Slide out left, slide in right
                     }
                 }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "arrow.counterclockwise")
-                        Text("Refill Paper")
-                            .font(.system(size: 14, weight: .semibold))
-                    }
-                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 15)
-                    .background(.ultraThinMaterial.opacity(0.5))
-                    .cornerRadius(20)
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                        .padding(10)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
                 }
                 
                 Spacer()
                 
                 // Right: Title & Toggle
-                VStack(alignment: .trailing, spacing: 8) {
+                VStack(alignment: .trailing, spacing: 4) {
                     Text("Paper Roll")
-                        .font(.system(size: 22, weight: .thin, design: .serif))
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.4))
+                        .font(.system(size: 18, weight: .light, design: .serif))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
                     
                     Button(action: {
                         SoundManager.instance.playSound(.buttonClick)
@@ -207,16 +204,16 @@ struct PaperRollGameView: View {
                         }
                     }) {
                         Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                            .font(.system(size: 18))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                            .padding(10)
-                            .background(.ultraThinMaterial.opacity(0.5))
+                            .font(.system(size: 16))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                            .padding(8)
+                            .background(.ultraThinMaterial)
                             .clipShape(Circle())
                     }
                 }
             }
-            .padding(.horizontal, 25)
-            .padding(.top, 10)
+            .padding(.horizontal, 20)
+            .padding(.top, 15)
         }
         .onAppear {
             startBreathingCycle()

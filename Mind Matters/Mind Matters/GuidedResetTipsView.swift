@@ -10,7 +10,7 @@ struct GuidedResetTipsView: View {
             Image("WelcomeWallpaper")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipped()
                 .ignoresSafeArea()
             

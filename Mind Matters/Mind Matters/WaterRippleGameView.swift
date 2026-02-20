@@ -38,7 +38,7 @@ struct WaterRippleGameView: View {
                 Color.cyan.opacity(0.05)
                     .blendMode(.screen)
             }
-            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .clipped()
             .ignoresSafeArea()
             
@@ -83,7 +83,7 @@ struct WaterRippleGameView: View {
                         }
                     }
                 }
-                .onChange(of: timeline.date) { _ in
+                .onChange(of: timeline.date) { oldDate, newDate in
                     updateRipples()
                 }
             }
@@ -120,11 +120,10 @@ struct WaterRippleGameView: View {
                 .allowsHitTesting(false)
             }
             
-        }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .safeAreaInset(edge: .top) {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
                 Button(action: { 
                     SoundManager.instance.playSound(.buttonClick)
                     dismiss() 
@@ -134,19 +133,20 @@ struct WaterRippleGameView: View {
                         Text("Exit")
                     }
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.6))
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 15)
-                    .background(.ultraThinMaterial.opacity(0.5))
-                    .cornerRadius(20)
+                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(25)
+                    .shadow(color: .black.opacity(0.08), radius: 8)
                 }
                 
                 Spacer()
                 
-                VStack(alignment: .trailing, spacing: 15) {
+                VStack(alignment: .trailing, spacing: 4) {
                     Text("Water Ripple")
-                        .font(.system(size: 24, weight: .thin, design: .serif))
-                        .foregroundColor(.white.opacity(0.6))
+                        .font(.system(size: 18, weight: .light, design: .serif))
+                        .foregroundColor(.white.opacity(0.8))
                     
                     Button(action: {
                         withAnimation(.spring()) {
@@ -154,16 +154,16 @@ struct WaterRippleGameView: View {
                         }
                     }) {
                         Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white.opacity(0.8))
-                            .padding(12)
+                            .font(.system(size: 16))
+                            .foregroundColor(.white.opacity(0.9))
+                            .padding(8)
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
                     }
                 }
             }
-            .padding(.horizontal, 25)
-            .padding(.top, 10)
+            .padding(.horizontal, 20)
+            .padding(.top, 15) // Increased top padding for better safe area clearance
         }
         .onAppear {
             hapticGenerator.prepare()

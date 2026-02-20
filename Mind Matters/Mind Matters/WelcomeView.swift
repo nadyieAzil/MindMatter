@@ -50,12 +50,14 @@ struct WelcomeView: View {
                         .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
                         .buttonStyle(PlainButtonStyle())
                         
-                        WelcomeButton(
-                            title: "Tips",
-                            icon: "lightbulb",
-                            color: Color(red: 0.55, green: 0.75, blue: 0.95),
-                            action: { SoundManager.instance.playSound(.buttonClick) }
-                        )
+                        NavigationLink(destination: EmotionSelectionView()) {
+                            WelcomeButtonContent(
+                                title: "Tips",
+                                icon: "lightbulb"
+                            )
+                        }
+                        .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .padding(.horizontal, 20)
                     

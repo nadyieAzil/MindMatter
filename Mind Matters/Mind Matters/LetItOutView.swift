@@ -5,6 +5,7 @@ struct LetItOutView: View {
     @State private var text: String = ""
     @State private var isReleasing: Bool = false
     @State private var currentQuestion: String = "Let everything out of your mind"
+    @State private var showResetTips: Bool = false
     
     var body: some View {
         ZStack {
@@ -114,6 +115,9 @@ struct LetItOutView: View {
             }
         }
         .navigationBarHidden(true)
+        .fullScreenCover(isPresented: $showResetTips) {
+            EmotionSelectionView()
+        }
         .safeAreaInset(edge: .top) {
             HStack {
                 Button(action: { 
@@ -148,6 +152,11 @@ struct LetItOutView: View {
             text = ""
             isReleasing = false
             currentQuestion = "Let everything out of your mind"
+            
+            // Navigate to Guided Reset
+            withAnimation {
+                showResetTips = true
+            }
         }
     }
 }

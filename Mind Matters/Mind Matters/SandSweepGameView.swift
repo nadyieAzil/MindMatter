@@ -178,12 +178,16 @@ struct SandSweepGameView: View {
                         }
                         hapticGenerator.impactOccurred(intensity: 0.5)
                     }) {
-                        Image(systemName: "arrow.counterclockwise")
-                            .font(.system(size: 14))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                            .padding(10)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
+                        HStack(spacing: 5) {
+                            Image(systemName: "arrow.counterclockwise")
+                            Text("Reset")
+                        }
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 15)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(20)
                     }
                     
                     Button(action: {
@@ -192,12 +196,16 @@ struct SandSweepGameView: View {
                             isFadeMode.toggle()
                         }
                     }) {
-                        Image(systemName: isFadeMode ? "sparkles" : "infinity")
-                            .font(.system(size: 14))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                            .padding(10)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
+                        HStack(spacing: 5) {
+                            Image(systemName: isFadeMode ? "sparkles" : "infinity")
+                            Text(isFadeMode ? "Fade" : "Remain")
+                        }
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 15)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(20)
                     }
                 }
                 

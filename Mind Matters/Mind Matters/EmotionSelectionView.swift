@@ -68,7 +68,7 @@ struct EmotionSelectionView: View {
                     }) {
                         HStack(spacing: 8) {
                             Image(systemName: "chevron.left")
-                            Text("Cancel")
+                            Text("Back")
                         }
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))

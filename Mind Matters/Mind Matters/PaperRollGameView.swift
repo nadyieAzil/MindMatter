@@ -125,31 +125,29 @@ struct PaperRollGameView: View {
                 .zIndex(5)
             }
             
-            // 3. PROGRESS BAR LAYER (Root Bottom)
-            GeometryReader { rootGeo in
-                VStack {
-                    Spacer()
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color.black.opacity(0.06))
-                            .frame(width: 300, height: 10)
-                        
-                        let progress = calculateProgress(rootHeight: rootGeo.size.height)
-                        Capsule()
-                            .fill(Color(red: 0.0, green: 0.48, blue: 1.0))
-                            .frame(width: 300 * progress, height: 10)
-                            .shadow(color: Color.blue.opacity(0.2), radius: 6, y: 2)
-                    }
-                    .padding(.bottom, rootGeo.safeAreaInsets.bottom + 35) // Lowered per request
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .allowsHitTesting(false)
-            }
-            .zIndex(6)
-            
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .bottom) {
+            // PROGRESS BAR - Now in safeAreaInset to avoid layout artifacts
+            VStack {
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.black.opacity(0.06))
+                        .frame(width: 300, height: 10)
+                    
+                    // Simple progress calculation based on absolute roll value
+                    let progress = min(1.0, max(0.0, (currentBottom == 0 ? 0 : currentBottom) / (totalPaperLength * 0.9)))
+                    Capsule()
+                        .fill(Color(red: 0.0, green: 0.48, blue: 1.0))
+                        .frame(width: 300 * progress, height: 10)
+                        .shadow(color: Color.blue.opacity(0.2), radius: 6, y: 2)
+                }
+                .padding(.bottom, 20)
+            }
+            .frame(maxWidth: .infinity)
+            .allowsHitTesting(false)
+        }
         .safeAreaInset(edge: .top) {
             HStack(alignment: .center) {
                 // Left: Exit
@@ -181,12 +179,16 @@ struct PaperRollGameView: View {
                         paperID = UUID() // Slide out left, slide in right
                     }
                 }) {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                        .padding(10)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Circle())
+                    HStack(spacing: 5) {
+                        Image(systemName: "arrow.counterclockwise")
+                        Text("Refill")
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 14)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(20)
                 }
                 
                 Spacer()

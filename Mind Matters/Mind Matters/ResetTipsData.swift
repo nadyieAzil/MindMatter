@@ -54,7 +54,7 @@ struct ResetTipsData {
                     ]
                 )
             ],
-            color: Color(red: 1.0, green: 0.8, blue: 0.8) // Soft red/pink
+            color: Color(red: 0.8, green: 0.2, blue: 0.2) // Deeper red
         ),
         EmotionTips(
             symbolName: "wind",
@@ -93,7 +93,7 @@ struct ResetTipsData {
                     ]
                 )
             ],
-            color: Color(red: 0.8, green: 0.9, blue: 1.0) // Soft blue
+            color: Color(red: 0.2, green: 0.4, blue: 0.6) // Slate blue
         ),
         EmotionTips(
             symbolName: "brain",
@@ -130,7 +130,7 @@ struct ResetTipsData {
                     ]
                 )
             ],
-            color: Color(red: 0.9, green: 0.8, blue: 1.0) // Soft purple
+            color: Color(red: 0.4, green: 0.3, blue: 0.6) // Deep indigo
         ),
         EmotionTips(
             symbolName: "cloud.fill",
@@ -165,7 +165,7 @@ struct ResetTipsData {
                     ]
                 )
             ],
-            color: Color(red: 0.8, green: 0.8, blue: 1.0) // Soft deep blue
+            color: Color(red: 0.1, green: 0.3, blue: 0.5) // Navy blue
         ),
         EmotionTips(
             symbolName: "circle.grid.cross.fill",
@@ -200,7 +200,7 @@ struct ResetTipsData {
                     ]
                 )
             ],
-            color: Color(red: 1.0, green: 1.0, blue: 0.8) // Soft yellow
+            color: Color(red: 0.8, green: 0.6, blue: 0.0) // Amber gold
         ),
         EmotionTips(
             symbolName: "battery.25",
@@ -235,7 +235,7 @@ struct ResetTipsData {
                     ]
                 )
             ],
-            color: Color(red: 0.9, green: 0.9, blue: 0.9) // Soft gray
+            color: Color(red: 0.4, green: 0.4, blue: 0.4) // Dark slate gray
         )
     ]
 }

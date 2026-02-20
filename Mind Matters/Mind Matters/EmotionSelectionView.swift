@@ -95,7 +95,7 @@ struct EmotionCard: View {
         VStack(spacing: 15) {
             Image(systemName: emotion.symbolName)
                 .font(.system(size: 40))
-                .foregroundColor(emotion.color.opacity(0.8))
+                .foregroundColor(emotion.color)
             
             Text(emotion.name)
                 .font(.system(size: 18, weight: .medium, design: .rounded))

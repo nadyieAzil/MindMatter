@@ -33,7 +33,7 @@ struct GuidedResetTipsView: View {
                             HStack(spacing: 15) {
                                 Image(systemName: emotion.symbolName)
                                     .font(.system(size: 40, weight: .thin))
-                                    .foregroundColor(emotion.color.opacity(0.8))
+                                    .foregroundColor(emotion.color)
                                 
                                 Text(emotion.name)
                                     .font(.system(size: 40, weight: .thin, design: .serif))

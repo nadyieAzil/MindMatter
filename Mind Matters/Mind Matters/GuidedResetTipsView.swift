@@ -82,6 +82,7 @@ struct GuidedResetTipsView: View {
             .padding(.leading, 20)
             .padding(.top, 10)
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

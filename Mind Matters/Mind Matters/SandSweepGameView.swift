@@ -141,100 +141,98 @@ struct SandSweepGameView: View {
                 .allowsHitTesting(false)
             }
             
-            // Header & Controls
-            VStack {
-                ZStack(alignment: .top) {
-                    // Left: Exit
-                    HStack {
-                        Button(action: { 
-                            SoundManager.instance.playSound(.buttonClick)
-                            dismiss() 
-                        }) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "chevron.left")
-                                Text("Exit")
-                            }
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(Color(red: 0.3, green: 0.4, blue: 0.2).opacity(0.6))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 15)
-                            .background(.ultraThinMaterial.opacity(0.5))
-                            .cornerRadius(20)
-                            .shadow(color: .black.opacity(0.05), radius: 8)
+        }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .top) {
+            ZStack(alignment: .top) {
+                // Left: Exit
+                HStack {
+                    Button(action: { 
+                        SoundManager.instance.playSound(.buttonClick)
+                        dismiss() 
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "chevron.left")
+                            Text("Exit")
                         }
-                        Spacer()
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(Color(red: 0.3, green: 0.4, blue: 0.2).opacity(0.6))
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 15)
+                        .background(.ultraThinMaterial.opacity(0.5))
+                        .cornerRadius(20)
+                        .shadow(color: .black.opacity(0.05), radius: 8)
+                    }
+                    Spacer()
+                }
+                
+                // Center: Reset & Mode
+                HStack(spacing: 15) {
+                    Button(action: {
+                        SoundManager.instance.playSound(.buttonClick)
+                        withAnimation(.spring()) {
+                            trails = []
+                            currentTrail = []
+                        }
+                        hapticGenerator.impactOccurred(intensity: 0.5)
+                    }) {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                            .padding(12)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.05), radius: 5)
                     }
                     
-                    // Center: Reset & Mode
-                    HStack(spacing: 15) {
+                    Button(action: {
+                        SoundManager.instance.playSound(.buttonClick)
+                        withAnimation(.spring()) {
+                            isFadeMode.toggle()
+                        }
+                    }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: isFadeMode ? "sparkles" : "infinity")
+                            Text(isFadeMode ? "Fade" : "Static")
+                                .font(.system(size: 14, weight: .semibold))
+                        }
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(20)
+                        .shadow(color: .black.opacity(0.05), radius: 5)
+                    }
+                }
+                
+                // Right: Title & Wind
+                HStack {
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 10) {
+                        Text("Sand Sweep")
+                            .font(.system(size: 24, weight: .thin, design: .serif))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
+                        
                         Button(action: {
-                            SoundManager.instance.playSound(.buttonClick)
                             withAnimation(.spring()) {
-                                trails = []
-                                currentTrail = []
+                                showBreathingGuide.toggle()
                             }
-                            hapticGenerator.impactOccurred(intensity: 0.5)
                         }) {
-                            Image(systemName: "arrow.counterclockwise")
-                                .font(.system(size: 18, weight: .medium))
+                            Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
+                                .font(.system(size: 20))
                                 .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
                                 .padding(12)
                                 .background(.ultraThinMaterial)
                                 .clipShape(Circle())
                                 .shadow(color: .black.opacity(0.05), radius: 5)
                         }
-                        
-                        Button(action: {
-                            SoundManager.instance.playSound(.buttonClick)
-                            withAnimation(.spring()) {
-                                isFadeMode.toggle()
-                            }
-                        }) {
-                            HStack(spacing: 6) {
-                                Image(systemName: isFadeMode ? "sparkles" : "infinity")
-                                Text(isFadeMode ? "Fade" : "Static")
-                                    .font(.system(size: 14, weight: .semibold))
-                            }
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 16)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(20)
-                            .shadow(color: .black.opacity(0.05), radius: 5)
-                        }
-                    }
-                    
-                    // Right: Title & Wind
-                    HStack {
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 10) {
-                            Text("Sand Sweep")
-                                .font(.system(size: 24, weight: .thin, design: .serif))
-                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.5))
-                            
-                            Button(action: {
-                                withAnimation(.spring()) {
-                                    showBreathingGuide.toggle()
-                                }
-                            }) {
-                                Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.7))
-                                    .padding(12)
-                                    .background(.ultraThinMaterial)
-                                    .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.05), radius: 5)
-                            }
-                        }
                     }
                 }
-                .padding(.horizontal, 25)
-                .padding(.top, 20)
-                
-                Spacer()
             }
+            .padding(.horizontal, 25)
+            .padding(.top, 10)
         }
-        .navigationBarHidden(true)
         .onAppear {
             hapticGenerator.prepare()
             startBreathingCycle()

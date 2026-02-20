@@ -120,10 +120,12 @@ struct WaterRippleGameView: View {
                 .allowsHitTesting(false)
             }
             
-            // Header & Controls
-            VStack {
-                HStack(alignment: .top) {
-                    Button(action: { 
+        }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .top) {
+            HStack(alignment: .top) {
+                Button(action: { 
                     SoundManager.instance.playSound(.buttonClick)
                     dismiss() 
                 }) {
@@ -138,35 +140,31 @@ struct WaterRippleGameView: View {
                     .background(.ultraThinMaterial.opacity(0.5))
                     .cornerRadius(20)
                 }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 15) {
-                        Text("Water Ripple")
-                            .font(.system(size: 24, weight: .thin, design: .serif))
-                            .foregroundColor(.white.opacity(0.6))
-                        
-                        Button(action: {
-                            withAnimation(.spring()) {
-                                showBreathingGuide.toggle()
-                            }
-                        }) {
-                            Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white.opacity(0.8))
-                                .padding(12)
-                                .background(.ultraThinMaterial)
-                                .clipShape(Circle())
-                        }
-                    }
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 20)
                 
                 Spacer()
+                
+                VStack(alignment: .trailing, spacing: 15) {
+                    Text("Water Ripple")
+                        .font(.system(size: 24, weight: .thin, design: .serif))
+                        .foregroundColor(.white.opacity(0.6))
+                    
+                    Button(action: {
+                        withAnimation(.spring()) {
+                            showBreathingGuide.toggle()
+                        }
+                    }) {
+                        Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(12)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                    }
+                }
             }
+            .padding(.horizontal, 25)
+            .padding(.top, 10)
         }
-        .navigationBarHidden(true)
         .onAppear {
             hapticGenerator.prepare()
             startBreathingCycle()

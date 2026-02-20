@@ -82,6 +82,7 @@ struct EmotionSelectionView: View {
                 .padding(.top, 10)
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

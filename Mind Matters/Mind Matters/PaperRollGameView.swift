@@ -147,79 +147,77 @@ struct PaperRollGameView: View {
             }
             .zIndex(6)
             
-            // 4. HEADER LAYER (Root Top)
-            VStack {
-                HStack(alignment: .top) {
-                    // Left: Exit
-                    Button(action: { 
-                        SoundManager.instance.playSound(.buttonClick)
-                        dismiss() 
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chevron.left")
-                            Text("Exit")
-                        }
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 15)
-                        .background(.ultraThinMaterial.opacity(0.5))
-                        .cornerRadius(20)
-                    }
-                    
-                    Spacer()
-                    
-                    // Center: Refill
-                    Button(action: {
-                        SoundManager.instance.playSound(.buttonClick)
-                        withAnimation(.easeInOut(duration: 0.8)) {
-                            velocity = 0
-                            currentBottom = 0
-                            paperID = UUID() // Slide out left, slide in right
-                        }
-                    }) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "arrow.counterclockwise")
-                            Text("Refill Paper")
-                                .font(.system(size: 14, weight: .semibold))
-                        }
-                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 15)
-                        .background(.ultraThinMaterial.opacity(0.5))
-                        .cornerRadius(20)
-                    }
-                    
-                    Spacer()
-                    
-                    // Right: Title & Toggle
-                    VStack(alignment: .trailing, spacing: 8) {
-                        Text("Paper Roll")
-                            .font(.system(size: 22, weight: .thin, design: .serif))
-                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.4))
-                        
-                        Button(action: {
-                            SoundManager.instance.playSound(.buttonClick)
-                            withAnimation(.spring()) {
-                                showBreathingGuide.toggle()
-                            }
-                        }) {
-                            Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
-                                .padding(10)
-                                .background(.ultraThinMaterial.opacity(0.5))
-                                .clipShape(Circle())
-                        }
-                    }
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 20)
-                Spacer()
-            }
-            .zIndex(10)
         }
         .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .top) {
+            HStack(alignment: .top) {
+                // Left: Exit
+                Button(action: { 
+                    SoundManager.instance.playSound(.buttonClick)
+                    dismiss() 
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "chevron.left")
+                        Text("Exit")
+                    }
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 15)
+                    .background(.ultraThinMaterial.opacity(0.5))
+                    .cornerRadius(20)
+                }
+                
+                Spacer()
+                
+                // Center: Refill
+                Button(action: {
+                    SoundManager.instance.playSound(.buttonClick)
+                    withAnimation(.easeInOut(duration: 0.8)) {
+                        velocity = 0
+                        currentBottom = 0
+                        paperID = UUID() // Slide out left, slide in right
+                    }
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.counterclockwise")
+                        Text("Refill Paper")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 15)
+                    .background(.ultraThinMaterial.opacity(0.5))
+                    .cornerRadius(20)
+                }
+                
+                Spacer()
+                
+                // Right: Title & Toggle
+                VStack(alignment: .trailing, spacing: 8) {
+                    Text("Paper Roll")
+                        .font(.system(size: 22, weight: .thin, design: .serif))
+                        .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.4))
+                    
+                    Button(action: {
+                        SoundManager.instance.playSound(.buttonClick)
+                        withAnimation(.spring()) {
+                            showBreathingGuide.toggle()
+                        }
+                    }) {
+                        Image(systemName: showBreathingGuide ? "wind" : "wind.circle")
+                            .font(.system(size: 18))
+                            .foregroundColor(Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.6))
+                            .padding(10)
+                            .background(.ultraThinMaterial.opacity(0.5))
+                            .clipShape(Circle())
+                    }
+                }
+            }
+            .padding(.horizontal, 25)
+            .padding(.top, 10)
+        }
         .onAppear {
             startBreathingCycle()
         }

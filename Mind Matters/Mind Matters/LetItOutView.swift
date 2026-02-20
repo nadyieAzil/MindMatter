@@ -152,11 +152,6 @@ struct LetItOutView: View {
             text = ""
             isReleasing = false
             currentQuestion = "Let everything out of your mind"
-            
-            // Navigate to Guided Reset
-            withAnimation {
-                showResetTips = true
-            }
         }
     }
 }

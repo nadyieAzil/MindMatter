@@ -6,13 +6,17 @@ struct GuidedResetTipsView: View {
     
     var body: some View {
         ZStack {
-            // Soft Gradient Background
-            LinearGradient(
-                gradient: Gradient(colors: [emotion.color.opacity(0.1), .white]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // Nature Background Wallpaper
+            Image("WelcomeWallpaper")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .ignoresSafeArea()
+            
+            // Aesthetic Layer: White + Blue tint overlay
+            Color.white.opacity(0.75)
+                .ignoresSafeArea()
+            Color(red: 0.1, green: 0.4, blue: 0.7).opacity(0.12)
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // Header Space
@@ -47,26 +51,6 @@ struct GuidedResetTipsView: View {
                             }
                         }
                         .padding(.horizontal, 25)
-                        
-                        // Ripple Mode Button
-                        NavigationLink(destination: WaterRippleGameView()) {
-                            HStack {
-                                Image(systemName: "water.waves")
-                                Text("Open Ripple Mode")
-                            }
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 60)
-                            .background(
-                                Capsule()
-                                    .fill(Color(red: 0.4, green: 0.6, blue: 0.8))
-                                    .shadow(color: .blue.opacity(0.2), radius: 10, x: 0, y: 5)
-                            )
-                        }
-                        .simultaneousGesture(TapGesture().onEnded { SoundManager.instance.playSound(.buttonClick) })
-                        .padding(.horizontal, 40)
-                        .padding(.top, 20)
                         .padding(.bottom, 40)
                     }
                 }
@@ -138,22 +122,6 @@ struct TechniqueCard: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-                    
-                    Button(action: {
-                        SoundManager.instance.playSound(.buttonClick)
-                        // This could eventually trigger a timer or guided session
-                    }) {
-                        Text("Start Now")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(Color(red: 0.4, green: 0.6, blue: 0.8))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 16)
-                            .background(
-                                Capsule()
-                                    .stroke(Color(red: 0.4, green: 0.6, blue: 0.8), lineWidth: 1.5)
-                            )
-                    }
-                    .padding(.top, 10)
                 }
                 .padding(.top, 10)
                 .transition(.opacity)

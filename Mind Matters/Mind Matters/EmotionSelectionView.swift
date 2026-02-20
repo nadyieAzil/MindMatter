@@ -11,13 +11,17 @@ struct EmotionSelectionView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Soft Gradient Background
-                LinearGradient(
-                    gradient: Gradient(colors: [Color(red: 0.9, green: 0.95, blue: 1.0), .white]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+                // Nature Background Wallpaper
+                Image("WelcomeWallpaper")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
+                
+                // Aesthetic Layer: White + Blue tint overlay
+                Color.white.opacity(0.75)
+                    .ignoresSafeArea()
+                Color(red: 0.1, green: 0.4, blue: 0.7).opacity(0.12)
+                    .ignoresSafeArea()
                 
                 VStack(spacing: 40) {
                     // Header

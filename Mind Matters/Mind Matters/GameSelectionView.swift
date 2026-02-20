@@ -6,11 +6,15 @@ struct GameSelectionView: View {
     var body: some View {
         ZStack {
             // Background
-            Image("WelcomeWallpaper")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .ignoresSafeArea()
-                .blur(radius: 12)
+            GeometryReader { geometry in
+                Image("WelcomeWallpaper")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+                    .blur(radius: 12)
+            }
+            .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // Top Spacer to push everything down

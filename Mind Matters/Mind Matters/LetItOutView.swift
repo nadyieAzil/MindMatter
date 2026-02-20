@@ -10,12 +10,14 @@ struct LetItOutView: View {
     var body: some View {
         ZStack {
             // Background
-            Image("WelcomeWallpaper")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipped()
-                .ignoresSafeArea()
+            GeometryReader { geometry in
+                Image("WelcomeWallpaper")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+            }
+            .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // Header Space (Reserved for back button)

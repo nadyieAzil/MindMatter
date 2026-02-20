@@ -5,10 +5,14 @@ struct WelcomeView: View {
         NavigationStack {
             ZStack {
                 // Nature Background Wallpaper
-                Image("WelcomeWallpaper")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
+                GeometryReader { geometry in
+                    Image("WelcomeWallpaper")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                }
+                .ignoresSafeArea()
 
                 VStack(spacing: 30) {
                     Spacer()

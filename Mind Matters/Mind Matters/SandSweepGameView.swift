@@ -26,10 +26,12 @@ struct SandSweepGameView: View {
     var body: some View {
         ZStack {
             // Sand Background
-            sandColor
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipped()
-                .ignoresSafeArea()
+            GeometryReader { geometry in
+                sandColor
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+            }
+            .ignoresSafeArea()
             
             // Texture - Subtle Grain
             Canvas { context, size in

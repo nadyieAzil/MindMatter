@@ -11,12 +11,14 @@ struct EmotionSelectionView: View {
     var body: some View {
         ZStack {
                 // Nature Background Wallpaper
-                Image("WelcomeWallpaper")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .clipped()
-                    .ignoresSafeArea()
+                GeometryReader { geometry in
+                    Image("WelcomeWallpaper")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                }
+                .ignoresSafeArea()
                 
                 // Aesthetic Layer: White + Blue tint overlay
                 Color.white.opacity(0.75)

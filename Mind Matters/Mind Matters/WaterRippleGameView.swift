@@ -24,22 +24,24 @@ struct WaterRippleGameView: View {
     var body: some View {
         ZStack {
             // Deep water background with subtle motion
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 0.1, green: 0.25, blue: 0.45),
-                        Color(red: 0.05, green: 0.15, blue: 0.3)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                
-                // Subtle overlay to add depth
-                Color.cyan.opacity(0.05)
-                    .blendMode(.screen)
+            GeometryReader { geometry in
+                ZStack {
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color(red: 0.1, green: 0.25, blue: 0.45),
+                            Color(red: 0.05, green: 0.15, blue: 0.3)
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    
+                    // Subtle overlay to add depth
+                    Color.cyan.opacity(0.05)
+                        .blendMode(.screen)
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .clipped()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .clipped()
             .ignoresSafeArea()
             
             // Ripple Canvas

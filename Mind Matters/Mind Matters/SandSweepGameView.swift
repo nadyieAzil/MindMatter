@@ -140,7 +140,6 @@ struct SandSweepGameView: View {
                 }
                 .allowsHitTesting(false)
             }
-            
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)

@@ -119,7 +119,7 @@ struct WaterRippleGameView: View {
                 }
                 .allowsHitTesting(false)
             }
-            
+        }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .safeAreaInset(edge: .top) {

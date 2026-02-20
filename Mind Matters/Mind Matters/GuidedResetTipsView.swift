@@ -30,9 +30,15 @@ struct GuidedResetTipsView: View {
                     VStack(spacing: 30) {
                         // Title & Validation
                         VStack(spacing: 16) {
-                            Text("\(emotion.emoji) \(emotion.name)")
-                                .font(.system(size: 40, weight: .thin, design: .serif))
-                                .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                            HStack(spacing: 15) {
+                                Image(systemName: emotion.symbolName)
+                                    .font(.system(size: 40, weight: .thin))
+                                    .foregroundColor(emotion.color.opacity(0.8))
+                                
+                                Text(emotion.name)
+                                    .font(.system(size: 40, weight: .thin, design: .serif))
+                            }
+                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
                             
                             Rectangle()
                                 .fill(Color.gray.opacity(0.1))

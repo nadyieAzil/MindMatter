@@ -10,7 +10,7 @@ struct Technique: Identifiable {
 
 struct EmotionTips: Identifiable {
     let id = UUID()
-    let emoji: String
+    let symbolName: String
     let name: String
     let validation: String
     let techniques: [Technique]
@@ -20,7 +20,7 @@ struct EmotionTips: Identifiable {
 struct ResetTipsData {
     static let emotions: [EmotionTips] = [
         EmotionTips(
-            emoji: "😠",
+            symbolName: "bolt.fill",
             name: "Angry",
             validation: "It's okay to feel angry. Let's slow it down.",
             techniques: [
@@ -57,7 +57,7 @@ struct ResetTipsData {
             color: Color(red: 1.0, green: 0.8, blue: 0.8) // Soft red/pink
         ),
         EmotionTips(
-            emoji: "😰",
+            symbolName: "wind",
             name: "Anxious",
             validation: "Your body feels unsafe. Let's calm it.",
             techniques: [
@@ -96,7 +96,7 @@ struct ResetTipsData {
             color: Color(red: 0.8, green: 0.9, blue: 1.0) // Soft blue
         ),
         EmotionTips(
-            emoji: "🤯",
+            symbolName: "brain",
             name: "Overthinking",
             validation: "Your mind is running fast. Let's ground it.",
             techniques: [
@@ -133,7 +133,7 @@ struct ResetTipsData {
             color: Color(red: 0.9, green: 0.8, blue: 1.0) // Soft purple
         ),
         EmotionTips(
-            emoji: "😔",
+            symbolName: "cloud.fill",
             name: "Sad",
             validation: "It's okay to feel heavy.",
             techniques: [
@@ -168,7 +168,7 @@ struct ResetTipsData {
             color: Color(red: 0.8, green: 0.8, blue: 1.0) // Soft deep blue
         ),
         EmotionTips(
-            emoji: "😵",
+            symbolName: "circle.grid.cross.fill",
             name: "Overwhelmed",
             validation: "You have too much at once.",
             techniques: [
@@ -203,7 +203,7 @@ struct ResetTipsData {
             color: Color(red: 1.0, green: 1.0, blue: 0.8) // Soft yellow
         ),
         EmotionTips(
-            emoji: "😐",
+            symbolName: "battery.25",
             name: "Mentally Drained",
             validation: "You are tired, not broken.",
             techniques: [

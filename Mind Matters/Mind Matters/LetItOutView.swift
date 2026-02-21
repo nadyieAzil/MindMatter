@@ -71,7 +71,10 @@ struct LetItOutView: View {
                                     removal: .scale(scale: 0.05, anchor: .bottom)
                                         .combined(with: .opacity)
                                         .combined(with: .offset(y: 600))
-                                        .combined(with: .rotationEffect(.degrees(Double.random(in: -45...45))))
+                                        .combined(with: .modifier(
+                                            active: TransitionRotationModifier(angle: .degrees(Double.random(in: -45...45))),
+                                            identity: TransitionRotationModifier(angle: .zero)
+                                        ))
                                 ))
                         }
                     }
@@ -201,6 +204,14 @@ struct PaperView: View {
             }
         }
         .cornerRadius(10)
+    }
+}
+
+struct TransitionRotationModifier: ViewModifier {
+    let angle: Angle
+    
+    func body(content: Content) -> some View {
+        content.rotationEffect(angle)
     }
 }
 

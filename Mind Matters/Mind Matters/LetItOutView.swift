@@ -19,103 +19,113 @@ struct LetItOutView: View {
             }
             .ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                // Header Space (Reserved for back button)
-                Color.clear.frame(height: 70)
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 0) {
+                    // Header Space (Reserved for back button)
+                    Color.clear.frame(height: 80)
 
-                Spacer()
+                    // Question Area
+                    VStack(spacing: 16) {
+                        Text(currentQuestion)
+                            .font(.custom("Noteworthy-Light", size: 30))
+                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                            .id(currentQuestion)
+                            .transition(.opacity)
 
-                // Question Area
-                VStack(spacing: 16) {
-                    Text(currentQuestion)
-                        .font(.system(size: 28, weight: .thin, design: .serif))
-                        .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 40)
-                        .id(currentQuestion)
-                        .transition(.opacity)
-
-                    Button(action: {
-                        SoundManager.instance.playSound(.buttonClick)
-                        withAnimation(.spring()) {
-                            currentQuestion = ReflectionQuestions.all.randomElement() ?? ""
-                        }
-                    }) {
-                        Label("Get Random Question", systemImage: "sparkles")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 22)
-                            .background(
-                                Capsule()
-                                    .fill(Color(red: 0.5, green: 0.7, blue: 0.9))
-                            )
-                            .shadow(color: .blue.opacity(0.15), radius: 8, x: 0, y: 4)
-                    }
-                }
-                .padding(.bottom, 20)
-
-                // Paper Input Area
-                ZStack {
-                    if !isReleasing {
-                        TextEditor(text: $text)
-                            .font(.system(size: 20, weight: .regular, design: .serif))
-                            .lineSpacing(8)
-                            .scrollContentBackground(.hidden)
-                            .padding(EdgeInsets(top: 40, leading: 90, bottom: 40, trailing: 40))
-                            .background(
-                                PaperView()
-                                    .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 15)
-                            )
-                            .transition(.asymmetric(
-                                insertion: .opacity,
-                                removal: .scale.combined(with: .opacity).combined(with: .offset(y: 800))
-                            ))
-                    }
-                }
-                .padding(.horizontal, 30)
-                .frame(maxWidth: 800, maxHeight: 420) // Much more constrained height to prevent covering other UI
-                .layoutPriority(1) 
-
-                Spacer()
-
-                // Release Button
-                VStack(spacing: 20) {
-                    Button(action: {
-                        SoundManager.instance.playSound(.buttonClick)
-                        releaseConfession()
-                    }) {
-                        Text("Release Thoughts")
-                            .font(.title3)
-                            .fontWeight(.light)
-                            .foregroundColor(.white)
-                            .frame(width: 240, height: 60)
-                            .background(
-                                ZStack {
+                        Button(action: {
+                            SoundManager.instance.playSound(.buttonClick)
+                            withAnimation(.spring()) {
+                                currentQuestion = ReflectionQuestions.all.randomElement() ?? ""
+                            }
+                        }) {
+                            Label("Get Random Question", systemImage: "sparkles")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.white)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 22)
+                                .background(
                                     Capsule()
-                                        .fill(text.isEmpty ? Color.gray.opacity(0.4) : Color(red: 0.4, green: 0.6, blue: 0.8))
-                                    if !text.isEmpty {
+                                        .fill(Color(red: 0.5, green: 0.7, blue: 0.9))
+                                )
+                                .shadow(color: .blue.opacity(0.15), radius: 8, x: 0, y: 4)
+                        }
+                    }
+                    .padding(.bottom, 30)
+
+                    // Paper Input Area
+                    ZStack {
+                        if !isReleasing {
+                            TextEditor(text: $text)
+                                .font(.custom("Noteworthy-Light", size: 24))
+                                .lineSpacing(8)
+                                .scrollContentBackground(.hidden)
+                                .padding(EdgeInsets(top: 40, leading: 90, bottom: 40, trailing: 40))
+                                .background(
+                                    PaperView()
+                                        .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 15)
+                                )
+                                .transition(.asymmetric(
+                                    insertion: .opacity,
+                                    removal: .scale(scale: 0.05, anchor: .bottom)
+                                        .combined(with: .opacity)
+                                        .combined(with: .offset(y: 600))
+                                        .combined(with: .rotationEffect(.degrees(Double.random(in: -45...45))))
+                                ))
+                        }
+                    }
+                    .padding(.horizontal, 30)
+                    .frame(maxWidth: 800)
+                    .frame(height: 400)
+                    .layoutPriority(1) 
+
+                    // Release Button Area
+                    VStack(spacing: 24) {
+                        Button(action: {
+                            SoundManager.instance.playSound(.buttonClick)
+                            releaseConfession()
+                        }) {
+                            Text("Release Thoughts")
+                                .font(.custom("Noteworthy-Light", size: 22))
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .frame(width: 260, height: 60)
+                                .background(
+                                    ZStack {
                                         Capsule()
-                                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                                            .fill(text.isEmpty ? Color.gray.opacity(0.4) : Color(red: 0.4, green: 0.6, blue: 0.8))
+                                        if !text.isEmpty {
+                                            Capsule()
+                                                .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                                        }
                                     }
-                                }
-                            )
-                            .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.2), radius: 15, x: 0, y: 8)
+                                )
+                                .shadow(color: text.isEmpty ? .clear : .blue.opacity(0.2), radius: 15, x: 0, y: 8)
+                        }
+                        .disabled(text.isEmpty || isReleasing)
+                        .padding(.top, 40)
+                        
+                        // Trash Bin Indicator
+                        ZStack {
+                            if isReleasing {
+                                Image(systemName: "trash.circle.fill")
+                                    .font(.system(size: 100))
+                                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5))
+                                    .shadow(color: .black.opacity(0.3), radius: 15, x: 0, y: 10)
+                                    .transition(.scale.combined(with: .opacity))
+                            } else {
+                                Image(systemName: "trash.circle")
+                                    .font(.system(size: 60))
+                                    .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.1))
+                            }
+                        }
+                        .frame(height: 120)
                     }
-                    .disabled(text.isEmpty || isReleasing)
-                    
-                    // Trash Bin Indicator
-                    if isReleasing {
-                        Image(systemName: "trash.circle.fill")
-                            .font(.system(size: 80))
-                            .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.5).opacity(0.2))
-                            .transition(.scale.combined(with: .opacity))
-                    } else {
-                        Color.clear.frame(height: 80)
-                    }
+                    .padding(.bottom, 50)
                 }
-                .padding(.bottom, 30)
             }
+            .scrollDismissesKeyboard(.interactively)
         }
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showResetTips) {
@@ -147,7 +157,8 @@ struct LetItOutView: View {
     }
     
     private func releaseConfession() {
-        withAnimation(.easeInOut(duration: 1.4)) {
+        SoundManager.instance.playSound(.paperUnroll)
+        withAnimation(.interpolatingSpring(stiffness: 50, damping: 10)) {
             isReleasing = true
         }
         
@@ -179,7 +190,7 @@ struct PaperView: View {
                     var path = Path()
                     path.move(to: CGPoint(x: 0, y: y))
                     path.addLine(to: CGPoint(x: size.width, y: y))
-                    context.stroke(path, with: .color(Color.blue.opacity(0.08)), lineWidth: 1)
+                    context.stroke(path, with: .color(Color.blue.opacity(0.1)), lineWidth: 1)
                 }
                 
                 // Texture grain
